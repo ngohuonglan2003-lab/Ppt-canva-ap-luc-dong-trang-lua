@@ -20,7 +20,7 @@ const FA = 'Playfair Display';
 const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE';
 pres.title = 'Áp lực đồng trang lứa ở học sinh khối 10 THPT Lương Thế Vinh';
-pres.author = 'Văn Hào, Hạnh Nguyên';
+pres.author = 'Nguyễn Văn Hào, Nguyễn Thị Hạnh Nguyên';
 pres.theme = { headFontFace: F, bodyFontFace: F };
 
 // ---------- assets ----------
@@ -180,8 +180,8 @@ function bullets(s, items, x, y, w, h, o = {}) {
 const b = (t, o = {}) => ({ text: t, options: Object.assign({ bold: true }, o) });
 const n = (t, o = {}) => ({ text: t, options: o });
 
-const VH = 'Người trình bày: Văn Hào.\n';
-const HN = 'Người trình bày: Hạnh Nguyên.\n';
+const VH = 'Người trình bày: Nguyễn Văn Hào.\n';
+const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
 
 (async () => {
   BG = await bgDark();
@@ -191,23 +191,23 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 1. TITLE =================
   {
-    const s = dark(VH + 'Kính thưa ban giám khảo, quý thầy cô và các bạn. Chúng em là Văn Hào và Hạnh Nguyên, học sinh Trường THPT Lương Thế Vinh. Hôm nay chúng em xin trình bày dự án nghiên cứu: "Áp lực đồng trang lứa ở học sinh khối 10 THPT Lương Thế Vinh", thuộc lĩnh vực Khoa học xã hội và hành vi.');
+    const s = dark(VH + 'Kính thưa ban giám khảo, quý thầy cô và các bạn. Chúng em là Nguyễn Văn Hào và Nguyễn Thị Hạnh Nguyên, học sinh lớp 10A11 Trường THPT Lương Thế Vinh, dưới sự hướng dẫn của cô Ngô Hải Yến. Hôm nay chúng em xin trình bày dự án nghiên cứu: "Áp lực đồng trang lứa ở học sinh khối 10 THPT Lương Thế Vinh", thuộc lĩnh vực Khoa học xã hội và hành vi.');
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: M, y: 0.62, w: 6.9, h: 0.46, rectRadius: 0.23, fill: { color: C.gold }, line: { type: 'none' } });
     txt(s, 'CUỘC THI NGHIÊN CỨU KHOA HỌC KỸ THUẬT · NĂM HỌC 2026–2027', M, 0.62, 6.9, 0.46, { fontSize: 13, bold: true, color: C.darker, align: 'center', valign: 'middle' });
     txt(s, 'BÁO CÁO DỰ ÁN · LĨNH VỰC KHOA HỌC XÃ HỘI VÀ HÀNH VI', M, 1.42, 8, 0.35, { fontSize: 14, bold: true, color: C.soft, charSpacing: 1 });
     txt(s, 'Áp lực đồng trang lứa', M, 1.85, 8.2, 1.15, { fontSize: 50, bold: true, color: C.white, valign: 'middle' });
     txt(s, 'ở học sinh khối 10 THPT Lương Thế Vinh', M, 2.95, 7.9, 0.8, { fontSize: 27, bold: true, color: C.white, valign: 'middle' });
     txt(s, 'peer pressure', M, 3.8, 6, 0.7, { fontFace: FA, italic: true, fontSize: 34, color: C.gold, valign: 'middle' });
-    txt(s, [b('Giáo viên hướng dẫn: ', { color: C.soft }), n('[Tên giáo viên hướng dẫn]', { color: C.white })], M, 5.35, 7.5, 0.4, { fontSize: 18 });
+    txt(s, [b('Giáo viên hướng dẫn: ', { color: C.soft }), n('Cô Ngô Hải Yến', { color: C.white })], M, 5.35, 7.5, 0.4, { fontSize: 18 });
     txt(s, 'Trường THPT Lương Thế Vinh · Quảng Trị, tháng 11/2026', M, 5.85, 7.5, 0.4, { fontSize: 16, color: C.soft });
     // portrait placeholders
-    const xs = [8.75, 11.0];
-    const names = ['Văn Hào', 'Hạnh Nguyên'];
+    const xs = [8.55, 11.0];
+    const names = ['Nguyễn Văn Hào', 'Nguyễn Thị Hạnh Nguyên'];
     for (let i = 0; i < 2; i++) {
       s.addShape(pres.shapes.OVAL, { x: xs[i], y: 2.0, w: 1.95, h: 1.95, fill: { color: C.white, transparency: 92 }, line: { color: C.gold, width: 2, dashType: 'dash' } });
       txt(s, 'Ảnh chân dung', xs[i], 2.0, 1.95, 1.95, { fontSize: 12, color: C.soft, align: 'center', valign: 'middle' });
-      txt(s, names[i], xs[i] - 0.3, 4.1, 2.55, 0.45, { fontSize: 20, bold: true, color: C.white, align: 'center' });
-      txt(s, 'Học sinh thực hiện', xs[i] - 0.3, 4.52, 2.55, 0.35, { fontSize: 13, color: C.soft, align: 'center' });
+      txt(s, names[i], xs[i] - 0.25, 4.1, 2.45, 0.7, { fontSize: 17, bold: true, color: C.white, align: 'center', valign: 'middle' });
+      txt(s, 'Lớp 10A11', xs[i] - 0.25, 4.82, 2.45, 0.35, { fontSize: 14, bold: true, color: C.gold, align: 'center' });
     }
   }
 
@@ -437,7 +437,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 17. TIẾN TRÌNH =================
   {
-    const s = light('Tiến trình nghiên cứu', 'Ba giai đoạn từ tháng 9 đến tháng 11/2026', VH + 'Tháng 9/2026: nhóm tìm hiểu tài liệu về áp lực đồng trang lứa ở học sinh lớp 10, xây dựng cơ sở lý luận và hoàn thành đề cương. Tháng 10/2026: lập phiếu và đường link khảo sát, điều tra, phỏng vấn học sinh với mẫu dự kiến 230 học sinh khối 10, sau đó phân tích số liệu. Tháng 11/2026: triển khai thực nghiệm các giải pháp và hoàn thành đề tài. Người thực hiện: Văn Hào và Hạnh Nguyên.');
+    const s = light('Tiến trình nghiên cứu', 'Ba giai đoạn từ tháng 9 đến tháng 11/2026', VH + 'Tháng 9/2026: nhóm tìm hiểu tài liệu về áp lực đồng trang lứa ở học sinh lớp 10, xây dựng cơ sở lý luận và hoàn thành đề cương. Tháng 10/2026: lập phiếu và đường link khảo sát, điều tra, phỏng vấn học sinh với mẫu dự kiến 230 học sinh khối 10, sau đó phân tích số liệu. Tháng 11/2026: triển khai thực nghiệm các giải pháp và hoàn thành đề tài. Người thực hiện: Nguyễn Văn Hào và Nguyễn Thị Hạnh Nguyên, lớp 10A11.');
     const steps = [
       ['Tháng 9/2026', 'Nghiên cứu tài liệu', ['Xây dựng cơ sở lý luận', 'Lập và hoàn thành đề cương']],
       ['Tháng 10/2026', 'Khảo sát, phân tích', ['Lập phiếu, link khảo sát', 'Điều tra, phỏng vấn 230 học sinh', 'Phân tích số liệu, nhận xét']],
@@ -452,7 +452,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
       txt(s, steps[i][1], cx[i] - 1.6, 3.85, 3.2, 0.5, { fontSize: 21, bold: true });
       bullets(s, steps[i][2], cx[i] - 1.6, 4.45, 3.25, 1.75, { fontSize: 16, color: C.muted, gap: 6 });
     }
-    source(s, 'Người thực hiện: Văn Hào, Hạnh Nguyên');
+    source(s, 'Người thực hiện: Nguyễn Văn Hào, Nguyễn Thị Hạnh Nguyên (lớp 10A11)');
   }
 
   // ================= 18. PHƯƠNG PHÁP – TỔNG QUAN =================
@@ -569,12 +569,12 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 25. BIỂU HIỆN – KHẢO SÁT 230 =================
   {
-    const s = light('Biểu hiện · Kết quả khảo sát', 'Biểu hiện áp lực ở học sinh khối 10', HN + 'Đây là kết quả khảo sát 230 học sinh khối 10, sắp xếp theo tỷ lệ trả lời "Có". Cao nhất là nỗi sợ tụt lại phía sau, thua kém bạn bè: 211 bạn, chiếm 91,73%. Tiếp theo là cảm thấy mình thật tệ mỗi lần bị điểm kém: 86,95%. Vui cho thành công của bạn nhưng ngay sau đó buồn cho bản thân: 85,2%. Thói quen tự so sánh: 81,7%. Căng thẳng khi xung quanh ai cũng học giỏi và mất ngủ khi điểm thấp hơn bạn cùng nhóm: đều 80,43%.');
+    const s = light('Biểu hiện · Kết quả khảo sát', 'Biểu hiện áp lực ở học sinh khối 10', HN + 'Đây là kết quả khảo sát 230 học sinh khối 10, sắp xếp theo tỷ lệ trả lời "Có". Cao nhất là nỗi sợ tụt lại phía sau, thua kém bạn bè: 211 bạn, chiếm 91,74%. Tiếp theo là cảm thấy mình thật tệ mỗi lần bị điểm kém: 200 bạn, 86,96%. Vui cho thành công của bạn nhưng ngay sau đó buồn cho bản thân: 196 bạn, 85,22%. Thói quen tự so sánh: 188 bạn, 81,74%. Căng thẳng khi xung quanh ai cũng học giỏi và mất ngủ khi điểm thấp hơn bạn cùng nhóm: đều 80,43%.');
     const d = [
-      ['Sợ tụt lại phía sau, thua kém bạn bè', 91.73, '91,73%', 211],
-      ['Thấy mình thật tệ mỗi lần bị điểm kém', 86.95, '86,95%', 200],
-      ['Vui cho bạn nhưng ngay sau đó buồn cho mình', 85.2, '85,2%', 196],
-      ['Có thói quen tự so sánh với bạn cùng lứa', 81.7, '81,7%', 188],
+      ['Sợ tụt lại phía sau, thua kém bạn bè', 91.74, '91,74%', 211],
+      ['Thấy mình thật tệ mỗi lần bị điểm kém', 86.96, '86,96%', 200],
+      ['Vui cho bạn nhưng ngay sau đó buồn cho mình', 85.22, '85,22%', 196],
+      ['Có thói quen tự so sánh với bạn cùng lứa', 81.74, '81,74%', 188],
       ['Căng thẳng khi quanh mình ai cũng học giỏi', 80.43, '80,43%', 185],
       ['Suy nghĩ nhiều, mất ngủ khi điểm thấp hơn bạn', 80.43, '80,43%', 185],
     ];
@@ -592,10 +592,10 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 26. STAT 80–92 =================
   {
-    const s = light('Biểu hiện · Nhận định', 'Áp lực đồng trang lứa phổ biến ở khối 10', HN + 'Tổng hợp lại: tỷ lệ học sinh 15, 16 tuổi đang chịu ảnh hưởng của áp lực đồng trang lứa chiếm từ 80% đến 92% tùy từng biểu hiện. Biểu hiện nổi bật nhất là nỗi sợ thua kém bạn bè. Điều đáng chú ý là áp lực không chỉ dừng ở suy nghĩ mà còn ảnh hưởng đến cả giấc ngủ và ăn uống.');
-    txt(s, '80–92%', M, 2.0, 7, 2.0, { fontSize: 110, bold: true, color: C.gold, valign: 'middle' });
+    const s = light('Biểu hiện · Nhận định', 'Áp lực đồng trang lứa phổ biến ở khối 10', HN + 'Tổng hợp lại: tỷ lệ học sinh 15, 16 tuổi đang chịu ảnh hưởng của áp lực đồng trang lứa chiếm từ 80,43% đến 91,74% tùy từng biểu hiện. Biểu hiện nổi bật nhất là nỗi sợ thua kém bạn bè. Điều đáng chú ý là áp lực không chỉ dừng ở suy nghĩ mà còn ảnh hưởng đến cả giấc ngủ và ăn uống.');
+    txt(s, '80,43–91,74%', M, 2.0, 7, 2.0, { fontSize: 60, bold: true, color: C.gold, valign: 'middle' });
     txt(s, 'học sinh khối 10 có biểu hiện áp lực đồng trang lứa, tùy theo từng khía cạnh', M, 4.05, 6.4, 1.0, { fontSize: 22, bold: true });
-    const k = [['LuTrendingDown', '91,73%', 'sợ tụt lại phía sau là biểu hiện phổ biến nhất'], ['LuMoon', '80,43%', 'mất ngủ, ăn không ngon khi điểm thấp hơn bạn']];
+    const k = [['LuTrendingDown', '91,74%', 'sợ tụt lại phía sau là biểu hiện phổ biến nhất'], ['LuMoon', '80,43%', 'mất ngủ, ăn không ngon khi điểm thấp hơn bạn']];
     for (let i = 0; i < 2; i++) {
       const y = 2.0 + i * 2.2;
       card(s, 7.6, y, 5.17, 1.95);
@@ -667,8 +667,8 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
     let cx = x;
     items.forEach((t, i) => {
       s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: cx, y: y + 0.08, w: 0.22, h: 0.22, rectRadius: 0.05, fill: { color: colors[i] }, line: { type: 'none' } });
-      txt(s, t, cx + 0.3, y, 2.6, 0.38, { fontSize: 13, color: C.muted, valign: 'middle' });
-      cx += 0.55 + t.length * 0.1;
+      txt(s, t, cx + 0.3, y, 4.2, 0.38, { fontSize: 13, color: C.muted, valign: 'middle' });
+      cx += 0.7 + t.length * 0.095;
     });
   }
   {
@@ -677,12 +677,12 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
     card(s, M, 1.95, W - 2 * M, 2.05);
     txt(s, 'Phụ huynh có bao giờ chia sẻ với con về những áp lực của con?', M + 0.35, 2.12, 11.5, 0.45, { fontSize: 19, bold: true });
     stackBar(s, M + 0.35, 2.7, W - 2 * M - 0.7, [['Chưa bao giờ', 31.1, '31,1%'], ['Hiếm khi', 46.7, '46,7%'], ['Thường xuyên', 22.2, '22,2%']], cols);
-    legend(s, M + 0.35, 3.4, ['Chưa bao giờ (14)', 'Hiếm khi (21)', 'Thường xuyên (10)'], cols);
+    legend(s, M + 0.35, 3.4, ['Chưa bao giờ: 31,1% (14)', 'Hiếm khi: 46,7% (21)', 'Thường xuyên: 22,2% (10)'], cols);
     card(s, M, 4.25, W - 2 * M, 2.05);
     txt(s, 'Phụ huynh có hay so sánh con mình với “con nhà người ta”?', M + 0.35, 4.42, 11.5, 0.45, { fontSize: 19, bold: true });
     const cols2 = [C.green, C.gold, C.coral];
     stackBar(s, M + 0.35, 5.0, W - 2 * M - 0.7, [['Chưa bao giờ', 6.7, '6,7%'], ['Có nhưng ít', 71.1, '71,1%'], ['Thường xuyên', 22.2, '22,2%']], cols2);
-    legend(s, M + 0.35, 5.7, ['Chưa bao giờ (3)', 'Có nhưng ít (32)', 'Thường xuyên, vì thấy cần thiết (10)'], cols2);
+    legend(s, M + 0.35, 5.7, ['Chưa bao giờ: 6,7% (3)', 'Có nhưng ít: 71,1% (32)', 'Thường xuyên, vì thấy cần thiết: 22,2% (10)'], cols2);
     source(s, 'Nguồn: khảo sát 45 phụ huynh học sinh khối 10 của nhóm nghiên cứu, năm 2026');
   }
 
@@ -693,7 +693,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
     card(s, M, 1.95, W - 2 * M, 2.05);
     txt(s, 'Phụ huynh có tìm hiểu về sở thích và điểm mạnh của con?', M + 0.35, 2.12, 11.5, 0.45, { fontSize: 19, bold: true });
     stackBar(s, M + 0.35, 2.7, W - 2 * M - 0.7, [['Chưa', 2.2, '2,2%'], ['Không rõ', 71.1, '71,1%'], ['Hiểu rõ', 26.7, '26,7%']], cols);
-    legend(s, M + 0.35, 3.4, ['Chưa tìm hiểu (1)', 'Có nhưng không rõ (32)', 'Hiểu rõ (12)'], cols);
+    legend(s, M + 0.35, 3.4, ['Chưa tìm hiểu: 2,2% (1)', 'Có nhưng không rõ: 71,1% (32)', 'Hiểu rõ: 26,7% (12)'], cols);
     const k = [['46,7%', 'đặt tiêu chuẩn, kỳ vọng vượt quá khả năng của con', '21/45 phụ huynh'], ['57,8%', 'khoe thành tích của con lên mạng xã hội', '26/45 phụ huynh']];
     for (let i = 0; i < 2; i++) {
       const x = M + i * 6.2;
@@ -779,6 +779,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
     }
     card(s, M, 6.45 - 0.35, W - 2 * M, 0.6);
     txt(s, [b('Giải pháp ', { color: C.green }), n('tác động vào từng mắt xích: nguồn tác động, nhận thức, kỹ năng ứng phó và mạng lưới hỗ trợ.')], M + 0.3, 6.1, W - 2 * M - 0.6, 0.6, { fontSize: 16, valign: 'middle' });
+    source(s, 'Sơ đồ do nhóm tổng hợp từ kết quả khảo sát và cơ sở lý luận (mục tiêu 2: mô hình hóa)');
   }
 
   // ================= 37. SECTION 06 =================
@@ -957,7 +958,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 49. 88 → 14 =================
   {
-    const s = light('Đánh giá hiệu quả · Câu hỏi 1', 'Cảm giác mệt mỏi, căng thẳng giảm rõ rệt', HN + 'Kết quả khảo sát lần 2 cho thấy rõ sự thay đổi. Với câu hỏi "Bạn có đang cảm thấy mệt mỏi, căng thẳng hay không?", đợt 1 có 88% trả lời có, sau khi áp dụng giải pháp, đợt 2 chỉ còn 14%.');
+    const s = light('Đánh giá hiệu quả · Cảm giác mệt mỏi, căng thẳng', 'Cảm giác mệt mỏi, căng thẳng giảm rõ rệt', HN + 'Kết quả khảo sát lần 2 cho thấy rõ sự thay đổi. Với câu hỏi "Bạn có đang cảm thấy mệt mỏi, căng thẳng hay không?", đợt 1 có 88% trả lời có, sau khi áp dụng giải pháp, đợt 2 chỉ còn 14%.');
     const d1 = await donut(88, C.coral), d2 = await donut(14, C.green);
     const pos = [[M + 0.5, 'Đợt 1 · trước thực nghiệm', '88%', d1, C.coral], [7.4, 'Đợt 2 · sau thực nghiệm', '14%', d2, C.green]];
     for (const [x, lab, v, img, col] of pos) {
@@ -975,7 +976,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 50. CÁCH ỨNG PHÓ =================
   {
-    const s = light('Đánh giá hiệu quả · Câu hỏi 6', 'Học sinh chuyển từ giữ trong lòng sang chia sẻ', HN + 'Với câu hỏi số 6: "Khi cảm thấy mệt mỏi, khó chịu, stress bạn sẽ làm gì?" Ở đợt 1, phần lớn học sinh chọn giữ trong lòng. Ở đợt 2, phần lớn chọn tâm sự với người thân hoặc bạn bè, và tỷ lệ viết nhật ký cũng tăng rõ rệt. Đây là tín hiệu tốt cho thấy các bạn đã có cách ứng phó lành mạnh hơn.');
+    const s = light('Đánh giá hiệu quả · Cách ứng phó với căng thẳng', 'Học sinh chuyển từ giữ trong lòng sang chia sẻ', HN + 'Với câu hỏi "Khi cảm thấy mệt mỏi, khó chịu, stress bạn sẽ làm gì?" Ở đợt 1, phần lớn học sinh chọn giữ trong lòng. Ở đợt 2, phần lớn chọn tâm sự với người thân hoặc bạn bè, và tỷ lệ viết nhật ký cũng tăng rõ rệt. Đây là tín hiệu tốt cho thấy các bạn đã có cách ứng phó lành mạnh hơn.');
     const sh = async (f) => 'image/png;base64,' + (await sharp(path.join(MEDIA, f)).png().toBuffer()).toString('base64');
     card(s, M, 1.95, 5.0, 4.0);
     s.addImage({ data: await sh('image23.png'), x: M + 0.45, y: 2.05, w: 4.1, h: 3.8 });
@@ -994,8 +995,8 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
 
   // ================= 51. PHỤ HUYNH SAU =================
   {
-    const s = light('Đánh giá hiệu quả · Phụ huynh', 'Phụ huynh thay đổi theo hướng tích cực', HN + 'Sau khi tuyên truyền đến phụ huynh, dù thời gian không nhiều, hầu hết phụ huynh đã thay đổi: quan tâm con nhiều hơn, luôn động viên, chia sẻ khó khăn cùng con, trở thành chỗ dựa tinh thần vững chắc. Phụ huynh cũng không còn ý định khoe thành tích của con lên mạng xã hội, giảm áp lực cho học sinh và cho chính phụ huynh.');
-    const it = [['LuHeart', 'Quan tâm, động viên con nhiều hơn', 'Chia sẻ khó khăn, tạo động lực học tập'], ['LuHouse', 'Trở thành chỗ dựa tinh thần', 'Đồng hành thay vì so sánh, áp đặt'], ['LuSmartphone', 'Không còn ý định khoe thành tích', 'Giảm áp lực cho con và cho chính phụ huynh']];
+    const s = light('Đánh giá hiệu quả · Phụ huynh', 'Phụ huynh thay đổi theo hướng tích cực', HN + 'Sau khi tuyên truyền đến phụ huynh, dù thời gian không nhiều, hầu hết phụ huynh đã thay đổi: quan tâm con nhiều hơn, luôn động viên, chia sẻ khó khăn cùng con, trở thành chỗ dựa tinh thần vững chắc. Nhiều phụ huynh cũng hạn chế việc so sánh hay khoe thành tích học tập của con trên mạng xã hội, giúp giảm áp lực cho học sinh và cho chính phụ huynh.');
+    const it = [['LuHeart', 'Quan tâm, động viên con nhiều hơn', 'Chia sẻ khó khăn, tạo động lực học tập'], ['LuHouse', 'Trở thành chỗ dựa tinh thần', 'Đồng hành thay vì so sánh, áp đặt'], ['LuSmartphone', 'Hạn chế so sánh, khoe thành tích', 'Hạn chế so sánh hay khoe thành tích của con trên mạng xã hội']];
     for (let i = 0; i < 3; i++) {
       const y = 1.95 + i * 1.5;
       card(s, M, y, 7.4, 1.32);
@@ -1007,14 +1008,14 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
     txt(s, 'Trước thực nghiệm', 8.65, 2.25, 3.8, 0.4, { fontSize: 15, bold: true, color: C.soft });
     txt(s, '57,8%', 8.65, 2.65, 3.8, 0.9, { fontSize: 44, bold: true, color: C.gold });
     txt(s, 'phụ huynh khoe thành tích của con lên mạng xã hội', 8.65, 3.55, 3.75, 0.9, { fontSize: 16, color: C.white });
-    txt(s, 'Sau tuyên truyền: phụ huynh không còn ý định khoe thành tích của con.', 8.65, 4.6, 3.75, 1.3, { fontSize: 16, color: C.soft, italic: true });
+    txt(s, 'Sau tuyên truyền: nhiều phụ huynh hạn chế việc so sánh hay khoe thành tích của con trên mạng xã hội.', 8.65, 4.6, 3.75, 1.3, { fontSize: 16, color: C.soft, italic: true });
     source(s, 'Nguồn: khảo sát và ghi nhận của nhóm nghiên cứu, năm 2026');
   }
 
   // ================= 52. KẾT LUẬN =================
   {
-    const s = light('Kết luận', 'Ba kết luận chính của đề tài', HN + 'Kết luận. Thứ nhất, áp lực đồng trang lứa ở học sinh khối 10 trường mình khá phổ biến, từ 80% đến 92% tùy khía cạnh; học sinh rất cần sự quan tâm, đồng hành của gia đình và nhà trường. Thứ hai, áp lực hình thành do tâm sinh lý chưa ổn định và nhu cầu hòa nhập cao; tác động tiêu cực rõ nét hơn tích cực; học sinh nữ có xu hướng chịu tác động nhiều hơn học sinh nam. Thứ ba, sau thực nghiệm, học sinh nhận thức đúng hơn, biết điều chỉnh cảm xúc và hành vi, từng bước biến áp lực thành động lực.');
-    const k = [['LuChartBar', 'Phổ biến', 'Áp lực đồng trang lứa ở khối 10 chiếm 80–92% tùy khía cạnh; học sinh cần sự đồng hành của gia đình, nhà trường'], ['LuBrain', 'Nguyên nhân và tác động', 'Tâm sinh lý chưa ổn định, nhu cầu hòa nhập cao; tiêu cực rõ hơn tích cực; nữ chịu tác động nhiều hơn nam'], ['LuTrendingUp', 'Hiệu quả giải pháp', 'Học sinh nhận thức đúng hơn, biết điều chỉnh cảm xúc, biến áp lực thành động lực']];
+    const s = light('Kết luận', 'Ba kết luận chính của đề tài', HN + 'Kết luận. Thứ nhất, áp lực đồng trang lứa ở học sinh khối 10 trường mình khá phổ biến, từ 80,43% đến 91,74% tùy khía cạnh; học sinh rất cần sự quan tâm, đồng hành của gia đình và nhà trường. Thứ hai, áp lực hình thành do tâm sinh lý chưa ổn định và nhu cầu hòa nhập cao; tác động tiêu cực rõ nét hơn tích cực; học sinh nữ có xu hướng chịu tác động nhiều hơn học sinh nam. Thứ ba, sau thực nghiệm, học sinh nhận thức đúng hơn, biết điều chỉnh cảm xúc và hành vi, từng bước biến áp lực thành động lực.');
+    const k = [['LuChartBar', 'Phổ biến', 'Áp lực đồng trang lứa ở khối 10 chiếm 80,43–91,74% tùy khía cạnh; học sinh cần sự đồng hành của gia đình, nhà trường'], ['LuBrain', 'Nguyên nhân và tác động', 'Tâm sinh lý chưa ổn định, nhu cầu hòa nhập cao; tiêu cực rõ hơn tích cực; nữ chịu tác động nhiều hơn nam'], ['LuTrendingUp', 'Hiệu quả giải pháp', 'Học sinh nhận thức đúng hơn, biết điều chỉnh cảm xúc, biến áp lực thành động lực']];
     for (let i = 0; i < 3; i++) {
       const x = M + i * 4.15;
       card(s, x, 1.95, 3.9, 4.4);
@@ -1069,7 +1070,7 @@ const HN = 'Người trình bày: Hạnh Nguyên.\n';
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: M, y: 4.95, w: 3.6, h: 0.62, rectRadius: 0.31, fill: { color: C.gold }, line: { type: 'none' } });
     txt(s, 'Hỏi và đáp', M, 4.95, 3.6, 0.62, { fontSize: 20, bold: true, color: C.darker, align: 'center', valign: 'middle' });
     txt(s, 'Mỗi người hôm nay có thể làm gì để bớt so sánh và thêm lắng nghe?', M, 5.8, 9, 0.5, { fontSize: 18, color: C.soft, italic: true });
-    txt(s, 'Văn Hào · Hạnh Nguyên · THPT Lương Thế Vinh', M, 6.55, 9, 0.35, { fontSize: 14, color: C.soft });
+    txt(s, 'Nguyễn Văn Hào · Nguyễn Thị Hạnh Nguyên · Lớp 10A11 · THPT Lương Thế Vinh · GVHD: cô Ngô Hải Yến', M, 6.55, 9, 0.35, { fontSize: 14, color: C.soft });
   }
 
   await pres.writeFile({ fileName: OUT });
