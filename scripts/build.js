@@ -14,8 +14,8 @@ const C = {
   gold: 'F4C542', green: '148054', coral: 'FF6A4D', muted: '5B6F66', track: 'E3EAE5',
   soft: 'C9D6CF', mint: 'E7F2EC',
 };
-const F = 'Be Vietnam Pro';
-const FA = 'Playfair Display';
+const F = 'Arial';
+const FA = 'Georgia';
 
 const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE';
@@ -132,9 +132,9 @@ function light(kicker, title, notes) {
   s.addShape(pres.shapes.OVAL, { x: W - 0.9, y: H - 1.1, w: 1.8, h: 1.8, fill: { color: C.mint }, line: { type: 'none' } });
   if (curSec) {
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: W - M - 2.35, y: 0.36, w: 2.35, h: 0.36, rectRadius: 0.18, fill: { color: C.dark }, line: { type: 'none' } });
-    txt(s, [b(curSec[0] + '  ', { color: C.gold }), n(curSec[1].toUpperCase(), { color: C.white })], W - M - 2.35, 0.36, 2.35, 0.36, { fontSize: 11, bold: true, align: 'center', valign: 'middle', charSpacing: 1 });
+    txt(s, [b(curSec[0] + '  ', { color: C.gold }), n(curSec[1].toUpperCase(), { color: C.white })], W - M - 2.35, 0.36, 2.35, 0.36, { fontSize: 11, bold: true, align: 'center', valign: 'middle' });
   }
-  txt(s, kicker.toUpperCase(), M, 0.42, 9.5, 0.3, { fontSize: 13, bold: true, color: C.green, charSpacing: 2 });
+  txt(s, kicker.toUpperCase(), M, 0.42, 9.5, 0.3, { fontSize: 13, bold: true, color: C.green });
   txt(s, title, M, 0.74, W - 2 * M, 0.85, { fontSize: 32, bold: true, color: C.ink, valign: 'middle', fit: 'shrink' });
   pageNum(s, false);
   if (notes) s.addNotes(notes);
@@ -157,7 +157,7 @@ function section(num, name, sub, notes) {
   const idx = parseInt(num, 10) - 1;
   curSec = ['Phần ' + num, SECTIONS[idx]];
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: M, y: 0.75, w: 1.55, h: 0.42, rectRadius: 0.21, fill: { color: C.gold }, line: { type: 'none' } });
-  txt(s, 'PHẦN ' + num + ' / 07', M, 0.75, 1.55, 0.42, { fontSize: 12, bold: true, color: C.darker, align: 'center', valign: 'middle', charSpacing: 1 });
+  txt(s, 'PHẦN ' + num + ' / 07', M, 0.75, 1.55, 0.42, { fontSize: 12, bold: true, color: C.darker, align: 'center', valign: 'middle' });
   txt(s, num, M - 0.05, 1.3, 4.5, 1.9, { fontSize: 140, bold: true, color: C.gold, valign: 'middle' });
   txt(s, name, M, 3.25, 7.3, 1.6, { fontSize: 42, bold: true, color: C.white, valign: 'top' });
   txt(s, sub, M, 4.95, 7.2, 0.8, { fontSize: 18, color: C.soft });
@@ -194,7 +194,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
     const s = dark(VH + 'Kính thưa ban giám khảo, quý thầy cô và các bạn. Chúng em là Nguyễn Văn Hào và Nguyễn Thị Hạnh Nguyên, học sinh lớp 10A11 Trường THPT Lương Thế Vinh, dưới sự hướng dẫn của cô Ngô Hải Yến. Hôm nay chúng em xin trình bày dự án nghiên cứu: "Áp lực đồng trang lứa ở học sinh khối 10 THPT Lương Thế Vinh", thuộc lĩnh vực Khoa học xã hội và hành vi.');
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: M, y: 0.62, w: 6.9, h: 0.46, rectRadius: 0.23, fill: { color: C.gold }, line: { type: 'none' } });
     txt(s, 'CUỘC THI NGHIÊN CỨU KHOA HỌC KỸ THUẬT · NĂM HỌC 2026–2027', M, 0.62, 6.9, 0.46, { fontSize: 13, bold: true, color: C.darker, align: 'center', valign: 'middle' });
-    txt(s, 'BÁO CÁO DỰ ÁN · LĨNH VỰC KHOA HỌC XÃ HỘI VÀ HÀNH VI', M, 1.42, 8, 0.35, { fontSize: 14, bold: true, color: C.soft, charSpacing: 1 });
+    txt(s, 'BÁO CÁO DỰ ÁN · LĨNH VỰC KHOA HỌC XÃ HỘI VÀ HÀNH VI', M, 1.42, 8, 0.35, { fontSize: 14, bold: true, color: C.soft });
     txt(s, 'Áp lực đồng trang lứa', M, 1.85, 8.2, 1.15, { fontSize: 50, bold: true, color: C.white, valign: 'middle' });
     txt(s, 'ở học sinh khối 10 THPT Lương Thế Vinh', M, 2.95, 7.9, 0.8, { fontSize: 27, bold: true, color: C.white, valign: 'middle' });
     txt(s, 'peer pressure', M, 3.8, 6, 0.7, { fontFace: FA, italic: true, fontSize: 34, color: C.gold, valign: 'middle' });
@@ -237,7 +237,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
   // ================= 3. VIDEO =================
   {
     const s = dark(VH + 'Trước khi đi vào nội dung, mời quý thầy cô và các bạn cùng xem một video ngắn về áp lực đồng trang lứa. (Chiếu video.) Sau video: Có lẽ ai trong chúng ta cũng từng ít nhất một lần cảm thấy mệt mỏi khi so sánh mình với bạn bè. Đó chính là vấn đề chúng em muốn tìm hiểu.');
-    txt(s, 'VIDEO MỞ ĐẦU', M, 0.7, 5, 0.35, { fontSize: 14, bold: true, color: C.gold, charSpacing: 2 });
+    txt(s, 'VIDEO MỞ ĐẦU', M, 0.7, 5, 0.35, { fontSize: 14, bold: true, color: C.gold });
     txt(s, 'Bạn đã bao giờ thấy mệt mỏi khi so sánh mình với bạn bè?', M, 1.2, 4.6, 2.4, { fontSize: 32, bold: true, color: C.white });
     txt(s, 'Video giới thiệu về áp lực đồng trang lứa giúp dẫn dắt vào vấn đề nghiên cứu.', M, 3.85, 4.4, 1.0, { fontSize: 17, color: C.soft });
     txt(s, [n('Nguồn video: '), n('youtu.be/M0eFKH_FUDI', { hyperlink: { url: 'https://youtu.be/M0eFKH_FUDI' }, color: C.gold })], M, 5.1, 4.6, 0.35, { fontSize: 14, color: C.soft });
@@ -273,7 +273,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
   {
     const s = light('Lý do chọn đề tài · 2/3', 'Lớp 10: cột mốc chuyển tiếp dễ bị chi phối', VH + 'Lớp 10 là cột mốc chuyển tiếp quan trọng: các bạn định hình bản sắc cá nhân, muốn khẳng định giá trị bản thân và dễ bị chi phối bởi chuẩn mực của nhóm bạn. Qua quan sát tại khối 10 trường mình, chúng em thấy nhiều bạn đang chạy đua về học tập, ngoại hình, năng khiếu; cố gắng thích nghi để được nhóm công nhận; chạy theo trào lưu mạng xã hội; thậm chí làm theo hành vi thiếu tích cực vì sợ bị tách khỏi tập thể.');
     dpanel(s, M, 1.95, 4.6, 4.55);
-    txt(s, 'Tuổi 15–16', M + 0.4, 2.3, 3.9, 0.5, { fontSize: 16, bold: true, color: C.gold, charSpacing: 1 });
+    txt(s, 'Tuổi 15–16', M + 0.4, 2.3, 3.9, 0.5, { fontSize: 16, bold: true, color: C.gold });
     txt(s, 'Định hình bản sắc, muốn khẳng định giá trị bản thân và được nhóm bạn công nhận', M + 0.4, 2.85, 3.9, 2.2, { fontSize: 22, bold: true, color: C.white });
     txt(s, 'Dễ bị chi phối bởi chuẩn mực, kỳ vọng từ nhóm bạn xung quanh', M + 0.4, 5.15, 3.9, 1.0, { fontSize: 16, color: C.soft });
     txt(s, 'Quan sát thực tế tại khối 10', 5.6, 1.95, 7, 0.4, { fontSize: 18, bold: true, color: C.green });
@@ -308,7 +308,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
       txt(s, risks[i][1], x + 0.15, 3.5, cw - 0.3, 0.8, { fontSize: 17, bold: true, align: 'center' });
     }
     dpanel(s, M, 4.75, W - 2 * M, 1.55);
-    txt(s, 'Đề tài', M + 0.4, 4.95, 2, 0.35, { fontSize: 14, bold: true, color: C.gold, charSpacing: 1 });
+    txt(s, 'Đề tài', M + 0.4, 4.95, 2, 0.35, { fontSize: 14, bold: true, color: C.gold });
     txt(s, '“Áp lực đồng trang lứa ở học sinh khối 10 THPT Lương Thế Vinh” nhằm làm rõ thực trạng và đề xuất định hướng hỗ trợ thiết thực cho học sinh.', M + 0.4, 5.3, W - 2 * M - 0.8, 0.9, { fontSize: 19, color: C.white });
   }
 
@@ -516,7 +516,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
   // ================= 22. HỒI CHUÔNG CẢNH BÁO =================
   {
     const s = dark(HN + 'Nhiều học sinh phải gánh sức ép tâm lý từ kết quả học tập chưa đạt kỳ vọng, kỳ vọng cao từ gia đình và áp lực thành tích. Thực tế đã ghi nhận nhiều sự việc thương tâm: tháng 4/2018 một nam sinh lớp 10 tại TP.HCM; tháng 10/2020 một nữ sinh lớp 12 vì áp lực thi đại học; tháng 4/2022 một nam sinh lớp 10 tại Hà Đông, Hà Nội; tháng 3/2023 một thiếu niên 13 tuổi ở Long An nhập viện cấp cứu vì áp lực học tập. Đến năm 2026, khi cạnh tranh trong học tập và đời sống số tiếp tục tăng, chăm sóc sức khỏe tinh thần học sinh càng cấp thiết.');
-    txt(s, 'THỰC TRẠNG CHUNG', M, 0.7, 6, 0.35, { fontSize: 14, bold: true, color: C.gold, charSpacing: 2 });
+    txt(s, 'THỰC TRẠNG CHUNG', M, 0.7, 6, 0.35, { fontSize: 14, bold: true, color: C.gold });
     txt(s, 'Hồi chuông cảnh báo về sức khỏe tinh thần học đường', M, 1.1, W - 2 * M, 0.9, { fontSize: 30, bold: true, color: C.white });
     const ev = [['04/2018', 'Nam sinh lớp 10 tại TP.HCM tử vong do sức ép tâm lý'], ['10/2020', 'Nữ sinh lớp 12 tự tử vì áp lực thi đại học'], ['04/2022', 'Nam sinh lớp 10 tại Hà Đông, Hà Nội tử vong do sức ép tâm lý'], ['03/2023', 'Thiếu niên 13 tuổi ở Long An nhập viện vì áp lực học tập']];
     const step = (W - 2 * M) / 4;
@@ -765,7 +765,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
       ['Cơ thể: mệt mỏi, mất ngủ', 'Cảm xúc: lo âu, tự ti', 'Hành vi: né tránh, đua đòi'],
       ['Sức khỏe tâm lý', 'Hành vi học tập'],
     ];
-    heads.forEach((h, i) => txt(s, h.toUpperCase(), colX[i], 1.85, cw, 0.35, { fontSize: 13, bold: true, color: C.green, align: 'center', charSpacing: 1 }));
+    heads.forEach((h, i) => txt(s, h.toUpperCase(), colX[i], 1.85, cw, 0.35, { fontSize: 13, bold: true, color: C.green, align: 'center' }));
     // col0
     boxes[0].forEach((t, j) => { card(s, colX[0], 2.3 + j * 0.92, cw, 0.76); txt(s, t, colX[0] + 0.15, 2.3 + j * 0.92, cw - 0.3, 0.76, { fontSize: 15, bold: true, align: 'center', valign: 'middle' }); });
     // col1 center
@@ -925,7 +925,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
   // ================= 46. TÌNH HUỐNG ĐÓNG VAI =================
   {
     const s = dark(VH + 'Trong tiết sinh hoạt tại các lớp 10 tham gia khảo sát ban đầu, nhóm đưa ra tình huống: "Các bạn thân rủ em đăng ký cùng một lớp học thêm, nhưng em đã có kế hoạch tự học. Em sẽ nói gì để các bạn hiểu quyết định của mình?" Các nhóm nhỏ đóng vai, thử ít nhất hai cách phản hồi và phân tích cảm xúc của cả người rủ lẫn người từ chối. Kết quả: đa số học sinh hào hứng, chủ động trao đổi. Nhóm đề xuất nhân rộng mô hình này.');
-    txt(s, 'THỰC NGHIỆM · THẢO LUẬN TÌNH HUỐNG VÀ ĐÓNG VAI', M, 0.7, 10, 0.35, { fontSize: 14, bold: true, color: C.gold, charSpacing: 2 });
+    txt(s, 'THỰC NGHIỆM · THẢO LUẬN TÌNH HUỐNG VÀ ĐÓNG VAI', M, 0.7, 10, 0.35, { fontSize: 14, bold: true, color: C.gold });
     txt(s, '“Các bạn thân rủ em đăng ký cùng một lớp học thêm, nhưng em đã có kế hoạch tự học. Em sẽ nói gì để các bạn hiểu quyết định của mình?”', M, 1.3, 7.4, 2.9, { fontSize: 27, bold: true, color: C.white });
     const st = ['Nhóm nhỏ đóng vai tình huống', 'Thử ít nhất hai cách phản hồi', 'Phân tích cảm xúc người rủ và người từ chối'];
     st.forEach((t, i) => {
@@ -1070,7 +1070,7 @@ const HN = 'Người trình bày: Nguyễn Thị Hạnh Nguyên.\n';
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: M, y: 4.95, w: 3.6, h: 0.62, rectRadius: 0.31, fill: { color: C.gold }, line: { type: 'none' } });
     txt(s, 'Hỏi và đáp', M, 4.95, 3.6, 0.62, { fontSize: 20, bold: true, color: C.darker, align: 'center', valign: 'middle' });
     txt(s, 'Mỗi người hôm nay có thể làm gì để bớt so sánh và thêm lắng nghe?', M, 5.8, 9, 0.5, { fontSize: 18, color: C.soft, italic: true });
-    txt(s, 'Nguyễn Văn Hào · Nguyễn Thị Hạnh Nguyên · Lớp 10A11 · THPT Lương Thế Vinh · GVHD: cô Ngô Hải Yến', M, 6.55, 9, 0.35, { fontSize: 14, color: C.soft });
+    txt(s, 'Nguyễn Văn Hào · Nguyễn Thị Hạnh Nguyên · Lớp 10A11 · THPT Lương Thế Vinh · GVHD: cô Ngô Hải Yến', M, 6.55, 11.5, 0.35, { fontSize: 14, color: C.soft });
   }
 
   await pres.writeFile({ fileName: OUT });
