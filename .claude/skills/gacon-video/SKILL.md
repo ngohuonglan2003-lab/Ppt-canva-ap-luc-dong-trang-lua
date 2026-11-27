@@ -10,6 +10,7 @@ Nhân vật chính: **Gà Con** (bản tiếng Anh: **Little Chick**).
 Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dùng chung hình và mốc thời gian, chỉ khác giọng đọc và chữ trên màn hình.
 
 ## Quy trình người dùng đã chốt (làm đúng thứ tự)
+0. **Đưa ý tưởng để chọn TRƯỚC.** Mỗi tập mới, đưa 4–6 ý tưởng khác nhau. Mỗi ý gồm: tên tập (vi/en), chủ đề học, hook 2 giây đầu, diễn biến 1 câu, điểm vui ở kết. Xen kẽ các series: đếm số, thói quen, cảm xúc/cư xử, ru ngủ, theo mùa. **Chờ người dùng chọn rồi mới viết kịch bản và dựng video.** Không tự làm tập mới khi chưa được chọn ý tưởng.
 1. **Kịch bản + lời thoại có tag cảm xúc** (ElevenLabs v3) cho cả 2 ngôn ngữ, kèm bảng mốc thời gian. Mẫu ở `references/huong-dan-loi-thoai.md`.
 2. **Bản xem trước chất lượng thấp** (360×640, 15 fps) để tiết kiệm. Chỉ xuất bản chuẩn khi người dùng duyệt:
    `EP_FILE=epN.html DUR=<giây> node render.js vi out.mp4 music_sfx.wav preview`
