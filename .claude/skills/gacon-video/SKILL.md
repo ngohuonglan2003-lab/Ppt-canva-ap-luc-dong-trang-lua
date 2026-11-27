@@ -106,6 +106,10 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
    - Câu dính liền nhau thì tìm chỗ năng lượng thấp nhất (RMS 10 ms) giữa hai chữ.
    - Mốc chữ của whisper có thể lệch khoảng 0,3 giây. Ưu tiên mốc từ silencedetect.
 4. Ghi `config.json` (targets và cuts), chạy `python3 voice_place.py voice.mp3 config.json voice/`.
+   - Người dùng có thể gửi **2 file riêng** (một tiếng Anh, một tiếng Việt, như tập 2). Khi đó làm mỗi file một config chỉ chứa 1 ngôn ngữ, cùng thư mục ra. Mẫu: `episodes/voice_ep2_cfg_en.json` và `episodes/voice_ep2_cfg_vi.json`.
+   - Công cụ hỗ trợ: `scripts/words.py file lang` in mốc từng chữ. `scripts/dips.py file 14.0:14.3 ...` tìm chỗ năng lượng thấp nhất trong mỗi khoảng.
+   - Nhớ giữ đuôi phụ âm ("ducks" có âm "s" kéo dài khoảng 0,15 giây sau chỗ lặng ngắn). Cắt sớm sẽ làm chữ "s" dính sang câu sau.
+   - Xuất với `ENV_DIR=<thư mục voice>` để render.js tìm `env_<lang>.json`.
 5. **Kiểm tra lại** bằng cách nhận diện `voice/voice_<lang>.wav`. Đủ câu, đúng thứ tự, không chữ nào bị dính sang câu khác thì mới đi tiếp.
 6. `bash mix.sh music_sfx.wav voice/voice_vi.wav mix_vi.wav`. Kiểm tra bằng `volumedetect`: đoạn có giọng phải to hơn đoạn chỉ có nhạc khoảng 9 dB.
 7. Xuất video với `mix_<lang>.wav`. `voice/env_<lang>.json` sẽ tự làm mỏ nhép theo giọng.
