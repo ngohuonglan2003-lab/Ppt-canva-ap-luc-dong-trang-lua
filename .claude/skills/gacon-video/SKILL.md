@@ -118,6 +118,23 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
 7. Xuất video với `mix_<lang>.wav`. `voice/env_<lang>.json` sẽ tự làm mỏ nhép theo giọng.
    - Mỏ mở thấy rõ miệng và lưỡi: đã vẽ lại trong `chick()`. Đừng dùng lại kiểu tam giác chồng lên mỏ của bản đầu, vì gần như không nhìn thấy.
 
+## Ghép giọng nhiều tập đọc liền (cách nhanh, đã kiểm chứng ở tập 3–6)
+1. Viết `spec_<lang>.json`: danh sách tập, mỗi tập có `name`, `dur`, `targets` và `words` (số chữ whisper của từng câu).
+   - Chạy `auto_cuts.py` một lần. Nếu tổng số chữ lệch, script in toàn bộ danh sách chữ kèm chỉ số để sửa `words`.
+   - Whisper hay tách "Bye-bye", "Uh-oh", "Pitter-patter" thành 2 chữ, và tiếng Việt "Giáng sinh" có thể ra 3 chữ.
+2. `python3 -I scripts/auto_cuts.py voice.mp3 en spec_en.json out/cfg_en` sẽ tạo `cfg_en_<tập>.json`. Ranh giới câu là khoảng lặng dài nhất gần mốc whisper.
+3. **Bắt buộc kiểm tra TỪNG CÂU**: `python3 -I scripts/verify_cuts.py voice.mp3 en cfg_en_ep3.json ...`. Script cắt từng câu ra rồi nhận diện riêng.
+   - Đừng kiểm tra bằng track đã ghép, vì whisper gộp các câu gần nhau nên khó thấy lỗi.
+4. Sửa các câu dính chữ bằng tay:
+   - In năng lượng 30 ms quanh chỗ lỗi, chọn chỗ thấp nhất giữa hai chữ, sửa `cuts` trong cfg (cuối câu trước = t−0.03, đầu câu sau = t+0.03), rồi kiểm tra lại.
+   - **Bài học:**
+     - Tiếng Anh đọc nhanh, whisper trôi mốc 0,3–0,6 giây.
+     - Phụ âm tắc ("Pup|py", "Le|t's") tạo khoảng lặng giả giữa một chữ, đừng cắt ở đó.
+     - Âm cuối kéo dài ("sleepy", "nhỉ") thường dính sang câu sau.
+     - Câu một âm tiết ("Một", "Hai", "Ba") bị nhận diện sai chữ là bình thường. Chỉ cần độ dài hợp lý.
+5. `voice_place.py` cho từng cfg, rồi `mix.sh`, rồi xuất với `ENV_DIR=voice_<tập>`.
+   - Điểm cắt tập 3–6 nằm trong `episodes/voice_ep3-6/`.
+
 ## Giới hạn môi trường đã biết
 - Mạng chặn dịch vụ đọc giọng (speech.platform.bing.com) và HuggingFace, nên không tự tạo giọng được. Người dùng tạo giọng bằng ElevenLabs.
 - Canva: model video mặc định cần gói trả phí. H3 Max thì dùng được.
