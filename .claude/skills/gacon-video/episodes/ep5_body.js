@@ -1,9 +1,9 @@
 // Tập 5 · Mưa rơi tí tách / Pitter Patter Rain — video thư giãn, ru ngủ (nhịp rất chậm)
 const EP={INTRO:4,MAIN:40,END:38.0};
 EP.LANG={
- vi:{caps:[[1.2,3.2,'Tách! Mưa rồi!'],[3.6,7.4,'Trốn dưới nấm thôi!'],[8.0,13.4,'Tí tách… tí tách…'],[14.0,19.4,'Bạn Ếch cũng nghe mưa.'],[20.0,25.4,'Oáp… buồn ngủ quá.'],[26.2,31.4,'Cầu vồng kìa!'],[32.0,37.6,'Ngủ ngon nhé, bé yêu.']],
+ vi:{caps:[[1.2,3.2,'Tách! Mưa rồi!'],[3.6,7.4,'Trốn dưới nấm thôi!'],[8.0,13.4,'Tí tách, tí\u00A0tách!'],[14.0,19.4,'Bạn Ếch cũng nghe mưa!'],[20.0,25.4,'Oáp! Buồn ngủ quá!'],[26.2,31.4,'Cầu vồng kìa!'],[32.0,37.6,'Ngủ ngon nhé, bé\u00A0yêu!']],
   name:'Gà Con',sub:'Chúc bé ngủ ngon!',ep:'Mưa rơi tí tách'},
- en:{caps:[[1.2,3.2,"Plip! It's raining!"],[3.6,7.4,'Hide under the mushroom!'],[8.0,13.4,'Pitter… patter…'],[14.0,19.4,'Froggy hears the rain too.'],[20.0,25.4,'Yaaawn… so sleepy.'],[26.2,31.4,'Look, a rainbow!'],[32.0,37.6,'Sweet dreams, little one.']],
+ en:{caps:[[1.2,3.2,"Plip! It's raining!"],[3.6,7.4,'Hide under the mushroom!'],[8.0,13.4,'Pitter patter, pitter patter!'],[14.0,19.4,'Froggy hears the rain too!'],[20.0,25.4,'Yaaawn! So sleepy!'],[26.2,31.4,'Look, a rainbow!'],[32.0,37.6,'Sweet dreams, little\u00A0one!']],
   name:'Little Chick',sub:'Good night!',ep:'Pitter Patter Rain'}
 };
 EP.SHOTS=[

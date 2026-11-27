@@ -1,9 +1,9 @@
 // Tập 4 · Chia bánh nhé! / Let's Share! — biết chia sẻ
 const EP={INTRO:4,MAIN:40,END:37.2};
 EP.LANG={
- vi:{caps:[[1.2,3.2,'Bánh của tớ!'],[3.4,6.8,'Ơ… ai cũng muốn ăn.'],[7.0,10.6,'A! Tớ có cách rồi!'],[10.8,14.6,'Bẻ đôi nào!'],[15.0,17.4,'Một nửa cho bạn…'],[17.5,20.0,'…một nửa cho tớ!'],[20.4,23.8,'Măm măm! Ngon\u00A0quá!'],[24.2,27.6,'Cảm ơn cậu nhé!'],[28.0,32.6,'Chia nhau thật vui!'],[33.0,36.8,'Bé cũng chia sẻ nhé! Bye bye!']],
+ vi:{caps:[[1.2,3.2,'Bánh của tớ!'],[3.4,6.8,'Ơ! Ai cũng muốn ăn!'],[7.0,10.6,'A! Tớ có cách rồi!'],[10.8,14.6,'Bẻ đôi nào!'],[15.0,17.4,'Một nửa cho bạn!'],[17.5,20.0,'Một nửa cho tớ!'],[20.4,23.8,'Măm măm! Ngon\u00A0quá!'],[24.2,27.6,'Cảm ơn cậu nhé!'],[28.0,32.6,'Chia nhau thật vui!'],[33.0,36.8,'Bé cũng chia sẻ nhé! Bye bye!']],
   name:'Gà Con',sub:'Hẹn gặp lại bé nhé!',ep:'Biết chia sẻ'},
- en:{caps:[[1.2,3.2,'My cookie!'],[3.4,6.8,'Uh-oh… we both want it.'],[7.0,10.6,'I have an idea!'],[10.8,14.6,"Let's break it in two!"],[15.0,17.4,'Half for you…'],[17.5,20.0,'…and half for me!'],[20.4,23.8,'Yum yum! So yummy!'],[24.2,27.6,'Thank you, friend!'],[28.0,32.6,'Sharing is fun!'],[33.0,36.8,"Let's share too! Bye-bye!"]],
+ en:{caps:[[1.2,3.2,'My cookie!'],[3.4,6.8,'Uh-oh! We both want it!'],[7.0,10.6,'I have an idea!'],[10.8,14.6,"Let's break it in two!"],[15.0,17.4,'Half for you!'],[17.5,20.0,'And half for me!'],[20.4,23.8,'Yum yum! So yummy!'],[24.2,27.6,'Thank you, friend!'],[28.0,32.6,'Sharing is fun!'],[33.0,36.8,"Let's share too! Bye-bye!"]],
   name:'Little Chick',sub:'See you next time!',ep:"Let's Share!"}
 };
 EP.SHOTS=[

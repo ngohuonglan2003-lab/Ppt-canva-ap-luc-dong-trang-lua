@@ -8,7 +8,7 @@ await p.evaluate(([title,nums,badge])=>{
  let w=sky(3.2,70)+hills()+grass(1.0);
  const ap=[[48,258],[90,266],[132,258]];
  w+=`<g transform="translate(90 212) scale(.8)">${chick({eyes:'happy',wl:110,wr:-110,mouth:.8})}</g>`;
- ap.forEach(([x,y],i)=>{w+=apple(x,y,1.25,(i-1)*12)});
+ if(typeof EP!=='undefined'&&EP.thumb){w+=EP.thumb();} else ap.forEach(([x,y],i)=>{w+=apple(x,y,1.25,(i-1)*12)});
  for(let k=0;k<10;k++){const x=15+((k*37)%150), y=150+((k*53)%70); w+=`<path transform="translate(${x} ${y}) scale(${.6+(k%3)*.25})" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#fff"/>`;}
  document.getElementById('svg').innerHTML=w;
  const st=document.getElementById('stage');

@@ -163,5 +163,8 @@ EP.main=function(t){
   return s;
 };
 
+// ảnh bìa: hồ nước + 4 chú vịt trước Gà Con
+EP.thumb=function(){let g=`<ellipse cx="90" cy="290" rx="110" ry="34" fill="${W2}"/><ellipse cx="90" cy="288" rx="104" ry="30" fill="${W1}"/>`;
+ [[30,262],[70,268],[110,268],[150,262]].forEach(([x,y],i)=>{g+=duck(x,y,{s:1.25,tuft:DCOL[i],eyes:'happy',flap:i%2?0.6:0,quack:i%2?0:0.7});});return g;};
 </script>
 <script src="engine.js"></script></body></html>

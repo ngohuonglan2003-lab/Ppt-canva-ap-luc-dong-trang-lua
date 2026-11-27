@@ -12,7 +12,10 @@ Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dù
 ## Quy trình người dùng đã chốt (làm đúng thứ tự)
 0. **Đưa ý tưởng để chọn TRƯỚC.** Mỗi tập mới, đưa 4–6 ý tưởng khác nhau. Mỗi ý gồm: tên tập (vi/en), chủ đề học, hook 2 giây đầu, diễn biến 1 câu, điểm vui ở kết. Xen kẽ các series: đếm số, thói quen, cảm xúc/cư xử, ru ngủ, theo mùa. **Chờ người dùng chọn rồi mới viết kịch bản và dựng video.** Không tự làm tập mới khi chưa được chọn ý tưởng.
 1. **Kịch bản + lời thoại có tag cảm xúc** (ElevenLabs v3) cho cả 2 ngôn ngữ, kèm bảng mốc thời gian. Mẫu và lời thoại mọi tập ở `references/huong-dan-loi-thoai.md`.
-   - **Mỗi câu một dòng, KHÔNG thêm dòng "…" ngăn cách giữa các câu** (người dùng đã yêu cầu). "…" chỉ dùng bên trong câu.
+   - **Viết liền thành MỘT ĐOẠN: hết câu thì chấm rồi viết luôn câu sau, KHÔNG xuống dòng** (xuống dòng tốn credit ElevenLabs). Hạn chế "…".
+   - **Giọng luôn vui vẻ, tươi tắn, hợp em bé, không đọc bình bình.** Tag nên dùng: excited, cheerfully, delighted, playfully, giggles, laughs, joyful, happily, sweetly. Không dùng slowly, whispers, sad, softly.
+   - Làm nhiều tập một lúc thì **gộp tất cả vào 1 đoạn cho mỗi ngôn ngữ** (English một đoạn, Tiếng Việt một đoạn). Câu chào đầu mỗi tập là mốc để tách tập khi ghép giọng.
+   - Sửa lời thoại thì sửa luôn `EP.LANG.caps` cho chữ trên màn hình khớp, rồi chạy lại `mk_ep.py`.
    - Khi người dùng chọn nhiều ý tưởng một lúc, làm lần lượt từng tập: kịch bản, hình, kiểm tra khung, âm thanh, rồi xuất tất cả bản xem trước.
 2. **Bản xem trước chất lượng thấp** (360×640, 15 fps) để tiết kiệm. Chỉ xuất bản chuẩn khi người dùng duyệt:
    `EP_FILE=epN.html DUR=<giây> node render.js vi out.mp4 music_sfx.wav preview`
@@ -92,7 +95,7 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
 - Chữ trên màn hình phải **khớp giọng đọc**. Ví dụ tập 1 phải đổi "Let's count together!" thành "Let's count!".
 
 ## Lời thoại và giọng (ElevenLabs)
-- Dùng model **Eleven v3**, Stability = Creative hoặc Natural. Tag cảm xúc viết tiếng Anh trong `[ ]`. v3 không nhận thẻ `<break>`, dùng "…" để ngắt.
+- Dùng model **Eleven v3**, Stability = Creative hoặc Natural. Tag cảm xúc viết tiếng Anh trong `[ ]`. v3 không nhận thẻ `<break>`. Định dạng: một đoạn liền, giọng vui tươi (xem `references/huong-dan-loi-thoai.md`).
 - Giọng nữ trẻ, tươi, đọc chậm. Ở Voice Design mô tả là "young adult", không mô tả "child".
 - Mỗi câu có mốc bắt đầu và độ dài tối đa. Câu đầu là intro ("Xin chào! Gà Con đây!" / "Hi! It's Little Chick!"), câu cuối là outro ("Hẹn gặp lại bé nhé!" / "See you soon!").
 
