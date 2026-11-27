@@ -11,7 +11,9 @@ Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dù
 
 ## Quy trình người dùng đã chốt (làm đúng thứ tự)
 0. **Đưa ý tưởng để chọn TRƯỚC.** Mỗi tập mới, đưa 4–6 ý tưởng khác nhau. Mỗi ý gồm: tên tập (vi/en), chủ đề học, hook 2 giây đầu, diễn biến 1 câu, điểm vui ở kết. Xen kẽ các series: đếm số, thói quen, cảm xúc/cư xử, ru ngủ, theo mùa. **Chờ người dùng chọn rồi mới viết kịch bản và dựng video.** Không tự làm tập mới khi chưa được chọn ý tưởng.
-1. **Kịch bản + lời thoại có tag cảm xúc** (ElevenLabs v3) cho cả 2 ngôn ngữ, kèm bảng mốc thời gian. Mẫu ở `references/huong-dan-loi-thoai.md`.
+1. **Kịch bản + lời thoại có tag cảm xúc** (ElevenLabs v3) cho cả 2 ngôn ngữ, kèm bảng mốc thời gian. Mẫu và lời thoại mọi tập ở `references/huong-dan-loi-thoai.md`.
+   - **Mỗi câu một dòng, KHÔNG thêm dòng "…" ngăn cách giữa các câu** (người dùng đã yêu cầu). "…" chỉ dùng bên trong câu.
+   - Khi người dùng chọn nhiều ý tưởng một lúc, làm lần lượt từng tập: kịch bản, hình, kiểm tra khung, âm thanh, rồi xuất tất cả bản xem trước.
 2. **Bản xem trước chất lượng thấp** (360×640, 15 fps) để tiết kiệm. Chỉ xuất bản chuẩn khi người dùng duyệt:
    `EP_FILE=epN.html DUR=<giây> node render.js vi out.mp4 music_sfx.wav preview`
 3. Người dùng gửi **1 file giọng** (thường gồm cả bản tiếng Anh lẫn tiếng Việt, đọc liền). Tách câu, đặt vào mốc, nhép miệng, hạ nhạc dưới giọng. Xem mục "Ghép giọng".
@@ -22,6 +24,15 @@ Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dù
 
 ## Cấu trúc file
 - `scripts/engine.js`: phần dùng chung. Gồm Gà Con `chick()`, táo, mặt trời có mặt, chim bay, gió (cỏ, hoa, lá bay, vệt gió), mây, đồi, intro 4 giây (logo bật từng chữ và nhãn tập), máy quay `cam()` theo bảng SHOTS, số to `bigNum()`, phụ đề, màn kết, nhép miệng `mouthAt()`.
+- `chick(o)` nhận: `sy, jump, wl, wr` (cánh: wl dương / wr âm là giơ lên), `eyes` ('open'|'wow'|'happy'|'blink'|'sleep'|'sad'), `mouth` 0–1, `hat` (mũ Noel), `body` (đổi màu thân).
+- `scripts/mk_ep.py`: ghép `epN_body.js` (chỉ phần JS của tập) với phần đầu HTML chung thành `epN_*.html`: `python3 mk_ep.py ep7_body.js ep7_ten.html`. Sửa tập thì **sửa file body rồi chạy lại mk_ep**.
+- Các tập đã có (body và html trong `episodes/`):
+  1. Đếm táo
+  2. Đếm vịt (hồ nước)
+  3. Ai trốn sau bụi cây (4 con vật ló tai, rồi bật lên lộ diện)
+  4. Chia bánh (Gà Con và bạn Vịt, bánh bẻ đôi, vết cắn)
+  5. Mưa rơi tí tách (ru ngủ: mưa, nấm, ếch, cầu vồng, ngủ)
+  6. Noel (tuyết, cây thông nháy đèn, 3 hộp quà và đồ chơi, Gà Con đội mũ Noel)
 - `episodes/epN_*.html`: mỗi tập chỉ khai báo `EP={INTRO,MAIN,END}`, `EP.LANG` (phụ đề vi/en, tên kênh, nhãn tập), `EP.SHOTS` và `EP.main(t)` (cảnh riêng). Tập mới thì **copy ep2 làm mẫu**. Bỏ `engine.js` cạnh file html.
 - `scripts/render.js`: xuất MP4 bằng Playwright và ffmpeg. Tham số: `lang out.mp4 audio.wav [preview]`; biến môi trường `EP_FILE`, `DUR`. Tự nạp `voice/env_<lang>.json` nếu có để nhép miệng.
 - `scripts/keys3.js`: chụp nhanh nhiều khung để kiểm tra (`node keys3.js ep.html vi 2,5.2,13 out`). Thời gian tính cả intro.
@@ -63,6 +74,17 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
   - Cảnh toàn lúc "Cùng đếm nào" phải thấy cả nhân vật lẫn mọi vật được đếm (zoom ≈ 1.05).
   - Cảnh trời quá trống thì hạ `cy` xuống khoảng 245–275.
 - Luôn kiểm tra bằng `keys3.js` (ghép bảng khung bằng ffmpeg hstack) trước khi xuất.
+
+## Bài học khi dựng cảnh (tập 3–6)
+- **Hai nhân vật cùng khung** (ví dụ Gà Con và Vịt): cảnh hai người dùng zoom ≈ 1.05–1.15. Thế giới chỉ rộng 180 đơn vị, zoom cao sẽ cắt người đứng gần mép.
+- **Vật ló ra sau bụi cây:** lúc gợi ý cho ló tai; lúc lộ diện cho bật lên cao hẳn (y ≈ 192, scale 1.35). Nếu không, bụi cây sẽ che gần hết.
+- **Hàng nhân vật phía dưới:** để ở y ≤ 292, nếu thấp hơn sẽ bị cắt ở mép khung.
+- **Vết cắn hoặc khoét lỗ:** dùng `<mask>` (trắng là giữ, đen là bỏ). Không dùng `mix-blend-mode`, vì nó vẽ ra chấm đen.
+- **Cảnh riêng (mưa, tuyết, đêm):** tự vẽ nền trong `EP.main` thay cho `sky()`. Có thể phủ một lớp màu lên `sky()` rồi giảm dần độ đậm khi trời quang.
+- **Màu nền màn kết:** đổi một lần trong main: `document.getElementById('end').style.background=...`.
+- **Câu thoại của nhân vật phụ:** khai báo khoảng thời gian (ví dụ `SP=[[24.2,27.6]]`) rồi dùng `mouthAt` cho mỏ nhân vật đó thay vì Gà Con.
+- **Tập ru ngủ:** nhạc `bpm=72`, giảm nhạc (`T.mus*=0.75`, `mus_gain=0.28`), ít cắt cảnh, máy đẩy chậm, cuối video tối dần, không có pháo giấy.
+- **Âm thanh mới trong sfxlib:** `rain_bed`, `drip`, `ribbit`, `crack`, `munch`, `bells`, `sleigh` (chuông Noel theo nhịp), `quack`, `splash`, `bubbles`, `step`.
 
 ## Phụ đề và chữ
 - Bong bóng phụ đề rộng tối đa 600px. Dùng ` ` để giữ cụm không bị xuống dòng (`Bye bye!`, `Giỏi quá!`).

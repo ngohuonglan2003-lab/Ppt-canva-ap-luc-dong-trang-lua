@@ -84,3 +84,32 @@ def ambience(T):
 def outro_sfx(T,t_end):
     for i,f in enumerate([2093,2637,3136]):T.add('sfx',t_end-3.5+i*0.08,ting(f,0.5),0.15)
     for i,m in enumerate([72,76,79,84]):T.add('sfx',t_end+i*0.14,ting(mf(m),1.2),0.3)
+# ---- thêm cho tập 3–6 ----
+def rain_bed(T,t0,t1,gain=0.5,fade=1.5):
+    i0,i1=int(t0*SR),min(T.N,int(t1*SR)); n=i1-i0
+    x=rng.uniform(-1,1,n); x=x-lp(x,6); x=lp(x,2)
+    tA=np.arange(n)/SR; env=np.clip(tA/fade,0,1)*np.clip((n/SR-tA)/fade,0,1)
+    T.sfx[i0:i1]+=x*env*gain
+    for k in range(int((t1-t0)*6)): T.add('sfx',rng.uniform(t0,t1),drip(),0.08)
+def drip():
+    t=tt(0.08); f=900+1800*t/0.08; return np.sin(2*np.pi*np.cumsum(f)/SR)*np.exp(-45*t)
+def ribbit(d=0.32):
+    t=tt(d); f=180+40*np.sin(np.pi*t/d); ph=2*np.pi*np.cumsum(f)/SR
+    am=(np.sin(2*np.pi*28*t)>0).astype(float)*0.8+0.2
+    return sum(np.sin(k*ph)/k for k in range(1,6))*am*np.sin(np.pi*t/d)*0.6
+def crack():
+    x=noise(0.12); t=tt(0.12); return (x-lp(x,3))*np.exp(-30*t)*1.5
+def munch():
+    out=np.zeros(int(0.5*SR))
+    for k in range(3):
+        c=lp(noise(0.07),4)*np.exp(-40*tt(0.07)); i=int(k*0.16*SR); out[i:i+len(c)]+=c
+    return out
+def bells(d=0.25):
+    t=tt(d); s=np.zeros(len(t))
+    for f in (2400,3150,4020): s+=np.sin(2*np.pi*f*t+rng.uniform(0,6))
+    return s*np.exp(-14*t)*0.35
+def sleigh(T,t0,t1,bpm=110):
+    b=60/bpm/2; t=t0
+    while t<t1: T.add('mus',t,bells(),0.55 if int(round((t-t0)/b))%2==0 else 0.3); t+=b
+def yawn_tone(d=1.2):
+    t=tt(d); f=300-120*t/d; return np.sin(2*np.pi*np.cumsum(f)/SR)*np.sin(np.pi*t/d)*0.3

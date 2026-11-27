@@ -1,0 +1,84 @@
+// Tập 5 · Mưa rơi tí tách / Pitter Patter Rain — video thư giãn, ru ngủ (nhịp rất chậm)
+const EP={INTRO:4,MAIN:40,END:38.0};
+EP.LANG={
+ vi:{caps:[[1.2,3.2,'Tách! Mưa rồi!'],[3.6,7.4,'Trốn dưới nấm thôi!'],[8.0,13.4,'Tí tách… tí tách…'],[14.0,19.4,'Bạn Ếch cũng nghe mưa.'],[20.0,25.4,'Oáp… buồn ngủ quá.'],[26.2,31.4,'Cầu vồng kìa!'],[32.0,37.6,'Ngủ ngon nhé, bé yêu.']],
+  name:'Gà Con',sub:'Chúc bé ngủ ngon!',ep:'Mưa rơi tí tách'},
+ en:{caps:[[1.2,3.2,"Plip! It's raining!"],[3.6,7.4,'Hide under the mushroom!'],[8.0,13.4,'Pitter… patter…'],[14.0,19.4,'Froggy hears the rain too.'],[20.0,25.4,'Yaaawn… so sleepy.'],[26.2,31.4,'Look, a rainbow!'],[32.0,37.6,'Sweet dreams, little one.']],
+  name:'Little Chick',sub:'Good night!',ep:'Pitter Patter Rain'}
+};
+EP.SHOTS=[
+ [0,3.4, 1.4,60,238, 1.5,58,238],
+ [3.4,8.0, 1.1,92,245, 1.2,92,245],
+ [8.0,14.0, 1.45,104,236, 1.7,104,236],
+ [14.0,20.0, 1.3,128,262, 1.4,130,264],
+ [20.0,26.0, 1.7,104,236, 1.95,104,238],
+ [26.0,32.0, 1.0,90,175, 1.08,92,182],
+ [32.0,99, 1.6,104,240, 1.9,104,242]];
+const MUSH={x:104,y:206};
+function rainAmt(t){return clamp((t-3.5)/1.5)*(1-clamp((t-25)/1.5));}
+function frog(x,y,o){
+  const {puff=0,blink=false,jumpK=0}=o; let g=`<g transform="translate(${x} ${y})">`;
+  g+=`<ellipse cx="0" cy="9" rx="13" ry="2.5" fill="#000" opacity=".12"/>`;
+  g+=`<ellipse cx="-10" cy="6" rx="6" ry="3.4" fill="#5AB43C"/><ellipse cx="10" cy="6" rx="6" ry="3.4" fill="#5AB43C"/>`;
+  g+=`<ellipse cx="0" cy="0" rx="13" ry="${9+jumpK*2}" fill="#6CC24A"/><ellipse cx="0" cy="3" rx="8" ry="5" fill="#A6E07A"/>`;
+  if(puff>0)g+=`<ellipse cx="0" cy="6" rx="${4+5*puff}" ry="${3+4*puff}" fill="#C9F0A8"/>`;
+  [-6,6].forEach(ex=>{g+=`<circle cx="${ex}" cy="-8" r="5" fill="#6CC24A"/>`+(blink?`<path d="M${ex-3} -8 h6" stroke="${C.eye}" stroke-width="1.4" stroke-linecap="round"/>`:`<circle cx="${ex}" cy="-8" r="3.2" fill="#fff"/><circle cx="${ex+.5}" cy="-7.6" r="1.8" fill="${C.eye}"/>`);});
+  g+=`<path d="M-5 -1 q5 4 10 0" stroke="${C.eye}" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="-8" cy="1" r="1.6" fill="${C.cheek}" opacity=".7"/><circle cx="8" cy="1" r="1.6" fill="${C.cheek}" opacity=".7"/>`;
+  return g+'</g>';
+}
+EP.main=function(t){
+  if(!window.__endset){const e=document.getElementById('end'); if(e){e.style.background='#C7D8F2'; window.__endset=1;}}
+  const R=rainAmt(t);
+  let w=sky(t);
+  // grey overlay + dark clouds
+  const ov=Math.max(R*0.85, clamp((t-2.8)/1.2)*(1-clamp((t-25.5)/1.5))*0.85);
+  w+=`<rect x="-40" y="-40" width="260" height="400" fill="#8EA3C2" opacity="${ov*0.75}"/>`;
+  if(ov>0.01){const cx=lerp(-60,0,clamp((t-2.8)/2)); const out=clamp((t-25.5)/2)*120;
+    [[20,60,22],[52,52,28],[90,62,24],[128,50,27],[165,62,22],[40,96,18],[110,92,20],[150,98,17]].forEach(([x,y,r],i)=>{w+=`<circle cx="${x+cx+out*(i%2?1:-1)}" cy="${y+Math.sin(t*0.6+i)*2}" r="${r}" fill="${i<5?'#7E8DA8':'#95A3BC'}" opacity="${ov}"/>`;});}
+  // rainbow
+  if(t>26){const a=clamp((t-26)/1.2); const cols=['#F2545B','#FF8C2B','#FFCC33','#3FAE5A','#45B6F0','#7A6CE0'];
+    cols.forEach((c,i)=>{const r=120-i*7; w+=`<path d="M${90-r} 250 A${r} ${r*0.95} 0 0 1 ${90+r} 250" fill="none" stroke="${c}" stroke-width="7" opacity="${a*0.85}" stroke-dasharray="${400}" stroke-dashoffset="${400*(1-eOut(clamp((t-26)/1.6)))}"/>`;});}
+  w+=hills();
+  // puddles
+  [[40,292,14],[150,294,16]].forEach(([x,y,r],i)=>{w+=`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*0.28}" fill="#8FC6E8"/>`;
+    if(R>0.1)for(let k=0;k<2;k++){const ph=((t*1.3+k*0.5+i*0.3)%1); w+=`<ellipse cx="${x+(k?4:-5)}" cy="${y}" rx="${2+ph*8}" ry="${0.6+ph*2}" fill="none" stroke="#fff" stroke-width=".8" opacity="${(1-ph)*R}"/>`;}});
+  w+=grass(t*0.5);
+  // mushroom
+  w+=`<path d="M${MUSH.x-9} ${MUSH.y} Q${MUSH.x-11} 260 ${MUSH.x-12} 284 L${MUSH.x+12} 284 Q${MUSH.x+11} 260 ${MUSH.x+9} ${MUSH.y} Z" fill="#FFF4E0"/>`;
+  // Gà Con
+  let gx=44, gy=238, gs=.58, eyes='open', jump=0, wl=0, wr=0, sy=1+0.015*Math.sin(t*2.2), rot=Math.sin(t*0.9)*1.5;
+  if(t>3.6){const u=eIO(prog(t,3.6,5.2)); gx=lerp(44,MUSH.x,u); gy=lerp(238,250,u); gs=lerp(.58,.5,u); if(u<1){jump=6*Math.abs(Math.sin(u*Math.PI*4)); rot=-8;}}
+  if(t>1.1&&t<3.4)eyes='wow';
+  if(t>8&&t<14){wl=20*Math.sin(t*2);}
+  if(t>20&&t<26){eyes=(t%2.2)<1.1?'sleep':'blink'; sy=1+0.03*Math.sin(t*1.6);}
+  if(t>26.2&&t<31.6){eyes='happy'; wl=80; gx=lerp(MUSH.x,MUSH.x-14,eOut(prog(t,26.2,26.8)));}
+  if(t>31.6){gx=lerp(MUSH.x-14,MUSH.x,eOut(prog(t,31.6,32.4))); eyes='sleep'; sy=1+0.035*Math.sin(t*1.4); rot=6;}
+  if(eyes==='open'&&(t%3.6)>3.45)eyes='blink';
+  let mouth=window.ENV?mouthAt(t+INTRO):0;
+  if(!window.ENV&&t>21&&t<22.6)mouth=Math.sin(Math.PI*(t-21)/1.6);
+  w+=`<g transform="translate(${gx} ${gy}) rotate(${rot} 0 50) scale(${gs})">${chick({sy,jump,wl,wr,eyes,mouth})}</g>`;
+  // cap (in front of chick head)
+  w+=`<path d="M${MUSH.x-42} ${MUSH.y+2} Q${MUSH.x-40} ${MUSH.y-38} ${MUSH.x} ${MUSH.y-40} Q${MUSH.x+40} ${MUSH.y-38} ${MUSH.x+42} ${MUSH.y+2} Q${MUSH.x} ${MUSH.y+10} ${MUSH.x-42} ${MUSH.y+2} Z" fill="#E85A5A"/>`;
+  [[-22,-14,6],[4,-26,7],[22,-10,5],[-6,-6,4],[30,-24,3.5],[-32,-2,3]].forEach(([dx,dy,r])=>w+=`<circle cx="${MUSH.x+dx}" cy="${MUSH.y+dy}" r="${r}" fill="#fff"/>`);
+  // drips from cap edge
+  if(R>0.2){for(let k=0;k<3;k++){const ph=((t*0.9+k*0.33)%1); const x=MUSH.x+[-40,0,40][k]*0.95; w+=`<path d="M${x} ${MUSH.y+4+ph*60} q-1.6 2.4 0 3.6 q1.6 -1.2 0 -3.6 Z" fill="#BFE7FA" opacity="${1-ph}"/>`;}}
+  // frog
+  if(t>14){let fx=150, fy=286, jk=0; if(t<15.4){const u=prog(t,14,15.4); fx=lerp(196,150,u); const h=(u*2)%1; fy=286-14*Math.sin(Math.PI*h); jk=Math.sin(Math.PI*h);}
+    const puff=(t>16&&t<16.6)?Math.sin(Math.PI*(t-16)/0.6):(t>17.6&&t<18.2)?Math.sin(Math.PI*(t-17.6)/0.6):0;
+    const blink=(t%3)>2.85||t>32;
+    w+=frog(fx,fy,{puff,blink,jumpK:jk});}
+  // hook drop
+  if(t>0.4&&t<1.15){const u=eIn(prog(t,0.4,1.1)); w+=`<path d="M44 ${lerp(120,236,u)-4} q-3 5 0 7 q3 -2 0 -7 Z" fill="#7CC8F0"/>`;}
+  if(t>1.1&&t<1.6){const u=(t-1.1)/0.5; for(let k=0;k<5;k++){const a=-Math.PI*(0.15+0.7*k/4); w+=`<circle cx="${44+Math.cos(a)*14*u}" cy="${236+Math.sin(a)*14*u+20*u*u}" r="1.2" fill="#7CC8F0" opacity="${1-u}"/>`;}}
+  // rain
+  if(R>0.01){for(let i=0;i<70;i++){const sp=150+rnd(i)*60; const x=rnd(i+7)*240-30+(t*8)%10; const y=((t*sp+rnd(i+50)*400)%400)-50;
+    if(x>MUSH.x-42&&x<MUSH.x+42&&y>MUSH.y-40)continue;
+    w+=`<path d="M${x} ${y} l-1.5 7" stroke="#E8F4FF" stroke-width="1.3" stroke-linecap="round" opacity="${R*0.85}"/>`;}}
+  // zzz
+  if(t>32.4){for(let k=0;k<3;k++){const ph=((t*0.45+k/3)%1); w+=`<text x="${MUSH.x+12+ph*18}" y="${226-ph*40}" font-family="'Baloo 2'" font-weight="800" font-size="${8+ph*6}" fill="#fff" stroke="${C.ink}" stroke-width="1.5" paint-order="stroke" opacity="${Math.sin(Math.PI*ph)}">z</text>`;}}
+  if(t<25)w+=wind(t*0.6).replace(/<ellipse[^>]*rotate[^>]*\/>/g,'');
+  // gentle vignette at the end
+  let s=`<g transform="${cam(t)}">${w}</g>`;
+  if(t>34)s+=`<rect width="180" height="320" fill="#1D3557" opacity="${clamp((t-34)/4)*0.35}"/>`;
+  return s;
+};

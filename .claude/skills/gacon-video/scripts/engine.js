@@ -27,16 +27,18 @@ function apple(x,y,s=1,rot=0,shadow=false){
   return g;
 }
 function chick(o){
-  const {sy=1,jump=0,wl=0,wr=0,eyes='open',mouth=0}=o;
+  const {sy=1,jump=0,wl=0,wr=0,eyes='open',mouth=0,hat=false,body=C.body}=o;
   let s=`<ellipse cx="0" cy="70" rx="${48-jump*.25}" ry="8" fill="#000" opacity="${.15-jump*.002}"/>`;
   s+=`<g transform="translate(0 ${-jump}) translate(0 68) scale(${2-sy} ${sy}) translate(0 -68)">`;
   s+=`<ellipse cx="-18" cy="64" rx="11" ry="5" fill="${C.beak}"/><ellipse cx="18" cy="64" rx="11" ry="5" fill="${C.beak}"/>`;
   s+=`<g transform="rotate(${wl} -50 0)"><ellipse cx="-60" cy="14" rx="14" ry="22" transform="rotate(25 -60 14)" fill="${C.wing}"/></g>`;
   s+=`<g transform="rotate(${wr} 50 0)"><ellipse cx="60" cy="14" rx="14" ry="22" transform="rotate(-25 60 14)" fill="${C.wing}"/></g>`;
   s+=`<path d="M-8 -58 C -12 -84, 4 -86, 2 -61 C 8 -80, 24 -76, 10 -57 Z" fill="${C.wing}"/>`;
-  s+=`<circle cx="0" cy="0" r="62" fill="${C.body}"/>`;
+  s+=`<circle cx="0" cy="0" r="62" fill="${body}"/>`;
   s+=`<ellipse cx="-24" cy="-32" rx="16" ry="9" transform="rotate(-30 -24 -32)" fill="#fff" opacity=".35"/>`;
   if(eyes==='happy') s+=`<path d="M-31 -9 q9 -11 18 0 M13 -9 q9 -11 18 0" fill="none" stroke="${C.eye}" stroke-width="4.5" stroke-linecap="round"/>`;
+  else if(eyes==='sleep') s+=`<path d="M-31 -12 q9 8 18 0 M13 -12 q9 8 18 0" fill="none" stroke="${C.eye}" stroke-width="4" stroke-linecap="round"/>`;
+  else if(eyes==='sad'){ s+=`<circle cx="-22" cy="-10" r="8" fill="${C.eye}"/><circle cx="22" cy="-10" r="8" fill="${C.eye}"/><circle cx="-19" cy="-13" r="2.6" fill="#fff"/><circle cx="25" cy="-13" r="2.6" fill="#fff"/><path d="M-32 -26 L-14 -22 M32 -26 L14 -22" stroke="${C.eye}" stroke-width="3.5" stroke-linecap="round"/>`; }
   else if(eyes==='blink') s+=`<path d="M-30 -12 h16 M14 -12 h16" stroke="${C.eye}" stroke-width="4" stroke-linecap="round"/>`;
   else{const r=eyes==='wow'?11:8.5;
     s+=`<circle cx="-22" cy="-12" r="${r}" fill="${C.eye}"/><circle cx="22" cy="-12" r="${r}" fill="${C.eye}"/>`;
@@ -50,6 +52,7 @@ function chick(o){
     s+=`<path d="M-8.5 ${5+6*m} L8.5 ${5+6*m} L0 ${11+8*m} Z" fill="#F27A1F"/>`;
     s+=`<path d="M-11.5 ${1-m} L11.5 ${1-m} L0 ${8.5-m} Z" fill="${C.beak}"/>`;
   }
+  if(hat){ s+=`<path d="M-44 -40 Q-6 -112 46 -86 Q30 -62 40 -40 Z" fill="#E63946"/><circle cx="48" cy="-86" r="10" fill="#fff"/><rect x="-50" y="-48" width="96" height="16" rx="8" fill="#fff"/>`; }
   return s+`</g>`;
 }
 function sun(x,y,r,t){
