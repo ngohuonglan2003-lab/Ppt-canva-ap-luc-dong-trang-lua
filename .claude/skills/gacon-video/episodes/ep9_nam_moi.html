@@ -1,0 +1,104 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#000}
+#stage{position:relative;width:720px;height:1280px;overflow:hidden;font-family:'Baloo 2',sans-serif}
+#svg{position:absolute;inset:0;width:720px;height:1280px}
+#cap{position:absolute;left:50%;top:64px;transform-origin:50% 50%;background:#fff;color:#1D3557;border-radius:44px;padding:18px 40px 10px;font-weight:800;font-size:62px;line-height:1.08;text-align:center;width:max-content;max-width:600px;box-shadow:0 8px 0 rgba(29,53,87,.18)}
+#cap::after{content:"";position:absolute;left:30%;bottom:-26px;border:16px solid transparent;border-top:20px solid #fff}
+#logo{position:absolute;left:0;right:0;top:190px;text-align:center;font-weight:800;font-size:150px;line-height:1;color:#FFCC33;white-space:nowrap}
+#logo span{display:inline-block;transform-origin:50% 90%;text-shadow:0 7px 0 #1D3557,5px 0 0 #1D3557,-5px 0 0 #1D3557,0 -5px 0 #1D3557,4px 4px 0 #1D3557,-4px 4px 0 #1D3557,4px -4px 0 #1D3557,-4px -4px 0 #1D3557}
+#ep{position:absolute;left:50%;top:385px;transform-origin:50% 50%;background:#F2545B;color:#fff;border-radius:40px;padding:14px 38px 6px;font-weight:800;font-size:60px;white-space:nowrap;box-shadow:0 7px 0 #B8323A}
+#flash{position:absolute;inset:0;background:#fff;pointer-events:none}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#9EDCFF;color:#1D3557;text-align:center}
+#end .n{font-size:120px;font-weight:800;line-height:1}
+#end .s{font-size:64px;font-weight:700;color:#fff;text-shadow:0 4px 0 #1D3557,3px 0 0 #1D3557,-3px 0 0 #1D3557,0 -3px 0 #1D3557}
+</style></head>
+<body><div id="stage"><svg id="svg" viewBox="0 0 180 320"></svg><div id="logo"></div><div id="ep"></div><div id="cap"></div><div id="end"><svg id="endsvg" viewBox="-80 -90 160 170" width="360" height="380"></svg><div class="n" id="endName"></div><div class="s" id="endSub"></div></div><div id="flash"></div></div>
+<script>
+// Tập 9 · Năm mới vui vẻ / Happy New Year — đếm ngược 3·2·1, pháo hoa (đăng 30–31/12)
+const EP={INTRO:4,MAIN:37,END:34.6};
+EP.LANG={
+ vi:{caps:[[1.2,3.2,'Tích tắc! Sắp năm mới rồi!'],[3.4,7.0,'Các bạn ơi, lại đây!'],[7.4,10.4,'Cùng đếm ngược nào!'],[11.0,12.6,'Ba!'],[13.0,14.6,'Hai!'],[15.0,16.6,'Một!'],[17.0,20.6,'Chúc mừng năm mới!'],[21.0,25.8,'Pháo hoa đẹp quá!'],[26.2,30.0,'Năm mới, bé lớn thêm rồi!'],[30.4,34.4,'Năm mới vui vẻ! Bye bye!']],
+  name:'Gà Con',sub:'Chúc mừng năm mới!',ep:'Đếm ngược 3 · 2 · 1'},
+ en:{caps:[[1.2,3.2,'Tick tock! New Year is coming!'],[3.4,7.0,'Come on, friends!'],[7.4,10.4,"Let's count down!"],[11.0,12.6,'Three!'],[13.0,14.6,'Two!'],[15.0,16.6,'One!'],[17.0,20.6,'Happy New Year!'],[21.0,25.8,'Wow! Fireworks!'],[26.2,30.0,"You're growing up!"],[30.4,34.4,'Happy New Year! Bye-bye!']],
+  name:'Little Chick',sub:'Happy New Year!',ep:'Countdown 3 · 2 · 1'}
+};
+EP.SHOTS=[
+ [0,3.4, 1.5,90,130, 1.6,90,128],
+ [3.4,7.4, 1.1,90,250, 1.15,90,250],
+ [7.4,11.0, 1.5,90,235, 1.6,90,232],
+ [11.0,17.0, 1.25,90,190, 1.4,90,180],
+ [17.0,26.0, 1.0,90,160, 1.05,90,165],
+ [26.0,30.4, 1.6,90,232, 1.75,90,230],
+ [30.4,99, 1.1,90,250, 1.2,90,250]];
+function nightSky(t){
+  let s=`<defs><linearGradient id="ns" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2A5C"/><stop offset="1" stop-color="#4A5FA8"/></linearGradient></defs><rect x="-40" y="-40" width="260" height="400" fill="url(#ns)"/>`;
+  for(let i=0;i<40;i++){const x=rnd(i)*200-10, y=rnd(i+40)*200; const tw=0.5+0.5*Math.sin(t*3+i); s+=`<circle cx="${x}" cy="${y}" r="${0.6+rnd(i+3)*0.9}" fill="#fff" opacity="${0.4+tw*0.6}"/>`;}
+  s+=`<circle cx="150" cy="40" r="11" fill="#FFF3C4"/><circle cx="155" cy="37" r="9" fill="#1F2E62"/>`;
+  return s;
+}
+function clock(t){
+  // kim phút chạy tới 12 lúc t=17
+  const left=clamp((17-t)/17); const ang=-left*90; const hour=-left*7.5;
+  const sw=Math.sin(t*4)*10;
+  let s=`<g transform="translate(90 88)"><circle r="30" fill="#FFF6D6" stroke="#E07A3A" stroke-width="5"/>`;
+  for(let k=0;k<12;k++){s+=`<rect x="-1" y="-26" width="2" height="${k%3?3:5}" fill="${C.ink}" transform="rotate(${k*30})"/>`;}
+  s+=`<rect x="-1.5" y="-14" width="3" height="16" rx="1.5" fill="${C.ink}" transform="rotate(${hour})"/><rect x="-1" y="-22" width="2" height="24" rx="1" fill="#F2545B" transform="rotate(${ang})"/><circle r="2.5" fill="${C.ink}"/>`;
+  s+=`<circle cx="-14" cy="-6" r="2.4" fill="${C.eye}"/><circle cx="14" cy="-6" r="2.4" fill="${C.eye}"/><path d="M-6 10 q6 5 12 0" stroke="${C.eye}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+  s+=`<g transform="rotate(${sw} 0 30)"><rect x="-1" y="30" width="2" height="18" fill="#C9652B"/><circle cy="50" r="5" fill="#FFCC33"/></g></g>`;
+  return s;
+}
+function firework(cx,cy,t0,t,col,n=14,R=34){
+  if(t<t0-0.6||t>t0+2.2)return '';
+  if(t<t0){const u=(t-t0+0.6)/0.6; return `<circle cx="${cx}" cy="${lerp(320,cy,eOut(u))}" r="1.6" fill="#FFF3C4"/>`;}
+  const u=(t-t0)/2.2; let s='';
+  for(let i=0;i<n;i++){const a=i/n*Math.PI*2; const r=R*eOut(Math.min(1,u*1.6)); const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r+u*u*14;
+    s+=`<circle cx="${x}" cy="${y}" r="${2.2*(1-u)+0.4}" fill="${col}" opacity="${1-u}"/><circle cx="${cx+Math.cos(a)*r*0.6}" cy="${cy+Math.sin(a)*r*0.6+u*u*10}" r="${1.2*(1-u)}" fill="#fff" opacity="${1-u}"/>`;}
+  return s;
+}
+function partyHat(x,y,s,c){return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-9 0 L0 -24 L9 0 Z" fill="${c}"/><path d="M-6 -8 L6 -8 M-3 -16 L3 -16" stroke="#fff" stroke-width="2"/><circle cy="-25" r="3" fill="#FFCC33"/></g>`;}
+EP.main=function(t){
+  if(!window.__endset){const e=document.getElementById('end'); if(e){e.style.background='#2F3F7A'; e.style.color='#FFF3C4'; window.__endset=1;}}
+  let w=nightSky(t);
+  // pháo hoa nền
+  const FW=[[17.0,90,90,'#F2545B'],[17.6,40,120,'#FFCC33'],[18.1,140,110,'#45B6F0'],[19.2,60,80,'#3FAE5A'],[19.8,130,70,'#FF8FA8'],[21.0,90,100,'#FFCC33'],[21.8,35,90,'#9B6CE0'],[22.4,150,95,'#F2545B'],[23.2,80,70,'#45B6F0'],[24.0,120,120,'#3FAE5A'],[25.0,50,100,'#FF8C2B'],[30.6,60,90,'#FFCC33'],[31.4,130,85,'#F2545B'],[32.2,90,70,'#45B6F0']];
+  FW.forEach(([t0,x,y,c])=>{w+=firework(x,y,t0,t,c);});
+  if(t<17.2) w+=clock(t);
+  // đồi đêm
+  w+=`<path d="M-40 262 Q60 238 120 258 T220 250 L220 340 L-40 340 Z" fill="#2E6B4F"/><path d="M-40 276 Q90 254 220 276 L220 340 L-40 340 Z" fill="#3F8A5E"/>`;
+  // dây đèn
+  for(let i=0;i<9;i++){const x=6+i*21, y=226+Math.sin(i*0.9)*4; const on=Math.sin(t*5+i*1.3)>0; w+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${['#F2545B','#FFCC33','#45B6F0','#3FAE5A'][i%4]}" opacity="${on?1:0.4}"/>`;}
+  w+=`<path d="M0 224 Q45 236 90 226 T180 226" stroke="#C9C3E8" stroke-width=".8" fill="none"/>`;
+  // các bạn
+  const inF=(a)=>eBack(prog(t,a,a+0.5));
+  const jumpAll=(t>17&&t<21)?8*Math.abs(Math.sin(t*Math.PI*1.6)):0;
+  const ud=inF(3.6), uc=inF(4.4);
+  w+=duckStand(lerp(205,146,ud),270-jumpAll,{s:1.4,flap:t>17&&t<26?Math.abs(Math.sin(t*9)):0,eyes:t>17?'happy':'open'});
+  w+=partyHat(lerp(205,146,ud)+3,246-jumpAll,0.7,'#45B6F0');
+  w+=`<g transform="translate(${lerp(-30,32,uc)} ${266-jumpAll}) scale(.8)"><ellipse cx="0" cy="22" rx="16" ry="12" fill="#FFB25B"/>${animal(0,0,(t%3.6)>3.45)}</g>`+partyHat(lerp(-30,32,uc),246-jumpAll,0.7,'#9B6CE0');
+  // Gà Con
+  let wl=0,wr=0,eyes='open',jump=0;
+  if(t<3.4){eyes='wow';}
+  if(t>3.4&&t<7){wl=60+40*Math.sin(t*8);}
+  for(const [b,n] of [[11,3],[13,2],[15,1]]) if(t>b&&t<b+1.6){wl=Math.max(wl,100); jump=4*Math.sin(Math.PI*(t-b)/0.5>Math.PI?0:Math.PI*(t-b)/0.5);}
+  if(t>17&&t<26){eyes='happy'; wl=120; wr=-120; jump=jumpAll;}
+  if(t>26&&t<30.4){eyes='happy';}
+  if(t>30.4){eyes='happy'; const k=eOut(prog(t,30.4,30.8)); wr=-k*(100+25*Math.sin((t-30.4)*2*Math.PI*2)); jump=3*Math.abs(Math.sin(t*5));}
+  if(eyes==='open'&&(t%3.3)>3.15)eyes='blink';
+  const mouth=window.ENV?mouthAt(t+INTRO):0;
+  w+=`<g transform="translate(90 236) rotate(${Math.sin(t*1.1)*2} 0 50) scale(.56)">${chick({jump,wl,wr,eyes,mouth})}</g>`+partyHat(92,200-jump*.56,1.1,'#F2545B');
+  // kèn giấy khi chúc mừng
+  if(t>17&&t<20){const u=((t-17)%1); w+=`<path d="M112 222 l${14+u*10} -6" stroke="#FF8FA8" stroke-width="3" stroke-linecap="round"/>`;}
+  let s=`<g transform="${cam(t)}">${w}</g>`;
+  s+=bigNum(3,t,11.0,12.8)+bigNum(2,t,13.0,14.8)+bigNum(1,t,15.0,16.8);
+  if(t>17&&t<21){const sc=popScale(t,17)*(t>20.6?clamp((21-t)/0.4):1); s+=`<g transform="translate(90 120) scale(${sc})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="40" fill="#FFCC33" stroke="#fff" stroke-width="6" paint-order="stroke">2027</text></g>`;}
+  if(t>17&&t<23){const cols=['#F2545B','#45B6F0','#FFCC33','#3FAE5A','#FF8FA8'];
+    for(let i=0;i<50;i++){const st=17+rnd(i)*1.2; if(t<st)continue; const u=t-st; const x=rnd(i+9)*180+Math.sin(u*3+i)*6; const y=-10+u*(55+rnd(i+3)*40); if(y>330)continue;
+      s+=`<rect x="${x}" y="${y}" width="3.2" height="5" fill="${cols[i%5]}" transform="rotate(${(u*300+i*40)%360} ${x+1.6} ${y+2.5})"/>`;}}
+  return s;
+};
+
+</script>
+<script src="engine.js"></script></body></html>

@@ -113,3 +113,23 @@ def sleigh(T,t0,t1,bpm=110):
     while t<t1: T.add('mus',t,bells(),0.55 if int(round((t-t0)/b))%2==0 else 0.3); t+=b
 def yawn_tone(d=1.2):
     t=tt(d); f=300-120*t/d; return np.sin(2*np.pi*np.cumsum(f)/SR)*np.sin(np.pi*t/d)*0.3
+# ---- thêm cho tập 7–11 ----
+def clap():
+    x=noise(0.06); x=x-lp(x,3); return x*np.exp(-60*tt(0.06))*1.4
+def tick():
+    t=tt(0.04); return np.sin(2*np.pi*2600*t)*np.exp(-120*t)
+def boom(d=1.2):
+    t=tt(d); x=lp(noise(d),40)*np.exp(-4*t)*2+np.sin(2*np.pi*np.cumsum(70-30*t/d)/SR)*np.exp(-6*t)
+    return x
+def crackle(d=0.8):
+    out=np.zeros(int(d*SR))
+    for k in range(40):
+        c=noise(0.006); i=int(rng.uniform(0,d-0.01)*SR); out[i:i+len(c)]+=c*rng.uniform(0.3,1)
+    return out*np.linspace(1,0.2,len(out))
+def deflate(d=2.3):
+    t=tt(d); f=400+250*np.sin(2*np.pi*7*t)+120*np.sin(2*np.pi*13*t)
+    buzz=np.sign(np.sin(2*np.pi*np.cumsum(f)/SR))*0.25; return lp(buzz,6)*np.exp(-0.8*t)+lp(noise(d),5)*0.15*np.exp(-t)
+def inflate(d=1.2):
+    t=tt(d); x=lp(noise(d),8); return x*np.sin(np.pi*t/d)*1.2
+def gong(d=1.5):
+    t=tt(d); return sum(np.sin(2*np.pi*f*t)*a for f,a in ((220,1),(331,.6),(447,.4),(612,.25)))*np.exp(-2.5*t)*0.5

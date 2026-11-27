@@ -45,3 +45,31 @@ targets: `[1.2,5.2,7.2,11.0,14.2,18.0,22.0,26.2,27.5,29.5,31.5,34.3,39.2,42.6]`.
 
 ## Tập 2 · Đếm 4 chú vịt con (49 giây) — đã xuất
 targets: `[1.2,5.2,7.2,10.5,14.0,17.0,20.0,23.0,27.0,30.0,32.2,33.5,35.0,36.5,38.0,39.6,44.0,47.2]`. Điểm cắt: `episodes/voice_ep2_cfg_en.json` và `episodes/voice_ep2_cfg_vi.json`.
+
+---
+
+## Tập 7–11 (bản gộp, gửi người dùng tạo giọng)
+
+### English
+```
+[excited] Hi! [giggles] It's Little Chick! [excited] Hey! Let's dance! [cheerfully] Clap your wings! Clap clap clap! [excited] Stomp your feet! Stomp stomp stomp! [playfully] Wiggle, wiggle! Wiggle wiggle! [delighted] Turn around! Spin spin spin! [joyful] Hands up high! Yay! [cheerfully] Great dancing! Bye-bye! [happily] See you soon! [excited] Hi! [giggles] It's Little Chick! [playfully] Where's Little Chick? [laughs] Peekaboo! [curious] Who's under the blanket? [laughs] Peekaboo! It's Duckie! [curious] Who's behind the leaf? [laughs] Peekaboo! It's Froggy! [curious] Who's behind the pot? [laughs] Peekaboo! It's Kitty! [playfully] Where are you, baby? [laughs] Peekaboo! I see you! [cheerfully] Let's play peekaboo! Bye-bye! [happily] See you soon! [excited] Hi! [giggles] It's Little Chick! [excited] Tick tock! New Year is coming! [cheerfully] Come on, friends! [excited] Let's count down! [excited] Three! [excited] Two! [excited] One! [joyful] Happy New Year! [delighted] Wow! Fireworks! [sweetly] You're growing up! [cheerfully] Happy New Year! Bye-bye! [happily] See you soon! [excited] Hi! [giggles] It's Little Chick! [surprised] Ooh! A red envelope! [joyful] Lunar New Year is here! [cheerfully] Hello, Little Goat! [joyful] Happy New Year! [delighted] Yummy rice cake! [excited] Let's count! [cheerfully] One! [cheerfully] Two! [excited] Three! [joyful] Happy and healthy! [cheerfully] Have a happy new year! Bye-bye! [happily] See you soon! [excited] Hi! [giggles] It's Little Chick! [surprised] Oops! The balloon flew away! [cheerfully] One! Red balloon! [cheerfully] Two! Yellow balloon! [cheerfully] Three! Green balloon! [cheerfully] Four! Blue balloon! [excited] Five! Purple balloon! [excited] Let's count! One! Two! Three! Four! Five! [joyful] Up, up and away! Wheee! [cheerfully] Great counting! Bye-bye! [happily] See you soon!
+```
+
+### Tiếng Việt
+```
+[excited] Xin chào! [giggles] Gà Con đây! [excited] Bé ơi! Cùng nhảy nào! [cheerfully] Vỗ tay, vỗ tay! Bộp bộp bộp! [excited] Dậm chân, dậm chân! Thình thịch thịch! [playfully] Lắc lư, lắc lư! Lắc lư nào! [delighted] Xoay tròn, xoay tròn! Một vòng nè! [joyful] Giơ tay lên cao! Yeah! [cheerfully] Bé nhảy giỏi quá! Bye bye! [happily] Hẹn gặp lại bé nhé! [excited] Xin chào! [giggles] Gà Con đây! [playfully] Gà Con đâu rồi? [laughs] Ú òa! [curious] Ai trốn dưới khăn thế? [laughs] Ú òa! Là bạn Vịt! [curious] Ai trốn sau lá thế? [laughs] Ú òa! Là bạn Ếch! [curious] Ai trốn sau chậu hoa? [laughs] Ú òa! Là bạn Mèo! [playfully] Bé ơi, bé đâu rồi? [laughs] Ú òa! Thấy bé rồi! [cheerfully] Cùng chơi ú òa nhé! Bye bye! [happily] Hẹn gặp lại bé nhé! [excited] Xin chào! [giggles] Gà Con đây! [excited] Tích tắc! Sắp năm mới rồi! [cheerfully] Các bạn ơi, lại đây! [excited] Cùng đếm ngược nào! [excited] Ba! [excited] Hai! [excited] Một! [joyful] Chúc mừng năm mới! [delighted] Pháo hoa đẹp quá! [sweetly] Năm mới, bé lớn thêm rồi! [cheerfully] Năm mới vui vẻ! Bye bye! [happily] Hẹn gặp lại bé nhé! [excited] Xin chào! [giggles] Gà Con đây! [surprised] Ơ! Bao lì xì kìa! [joyful] Tết đến rồi! Vui quá! [cheerfully] Xin chào bạn Dê! [joyful] Chúc mừng năm mới! [delighted] Bánh chưng xanh, ngon quá! [excited] Cùng đếm nào! [cheerfully] Một! [cheerfully] Hai! [excited] Ba! [joyful] Năm mới an khang! [cheerfully] Chúc bé năm mới vui vẻ! Bye bye! [happily] Hẹn gặp lại bé nhé! [excited] Xin chào! [giggles] Gà Con đây! [surprised] Ơ! Bóng bay mất rồi! [cheerfully] Một! Bóng màu đỏ! [cheerfully] Hai! Bóng màu vàng! [cheerfully] Ba! Bóng màu xanh lá! [cheerfully] Bốn! Bóng màu xanh dương! [excited] Năm! Bóng màu tím! [excited] Cùng đếm nào! Một! Hai! Ba! Bốn! Năm! [joyful] Bay lên nào! Wiii! [cheerfully] Bé đếm giỏi lắm! Bye bye! [happily] Hẹn gặp lại bé nhé!
+```
+
+### Mốc đặt câu (targets)
+| Tập | Số câu | targets |
+|---|---|---|
+| 7 · Vỗ tay (bài hát) | 9 | `[1.2,5.2,7.4,14.2,21.0,27.8,34.6,39.2,43.0]` |
+| 8 · Ú òa | 13 | `[1.2,5.2,7.4,10.0,12.8,16.0,18.8,22.0,24.8,28.0,31.8,34.8,38.8]` |
+| 9 · Năm mới | 12 | `[1.2,5.2,7.4,11.4,15.0,17.0,19.0,21.0,25.0,30.2,34.4,38.8]` |
+| 10 · Tết | 13 | `[1.2,5.2,7.4,11.4,15.4,19.4,23.4,25.0,26.5,28.0,30.2,34.4,38.8]` |
+| 11 · Bóng bay | 16 | `[1.2,5.2,7.4,11.8,16.2,20.6,25.0,29.4,31.0,32.4,33.8,35.2,36.6,38.0,42.0,45.8]` |
+
+Cách tách câu:
+- Tập 7: mỗi câu đoạn bài hát (ví dụ "Vỗ tay, vỗ tay! Bộp bộp bộp!") là **1 câu**.
+- Tập 10 và tập 11: "Cùng đếm nào!", rồi từng số, đều là **câu riêng**.
+- Tập 8: "Ú òa! Là bạn Vịt!" là **1 câu**.

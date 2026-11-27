@@ -1,0 +1,57 @@
+// Tập 11 · 5 quả bóng bay / 5 Balloons — đếm đến 5 và gọi tên màu
+const EP={INTRO:4,MAIN:44,END:41.6};
+EP.LANG={
+ vi:{caps:[[1.2,3.2,'Ơ! Bóng bay mất rồi!'],[3.4,7.4,'Một! Bóng màu đỏ!'],[7.8,11.8,'Hai! Bóng màu vàng!'],[12.2,16.2,'Ba! Bóng màu xanh lá!'],[16.6,20.6,'Bốn! Bóng màu xanh dương!'],[21.0,25.0,'Năm! Bóng màu tím!'],[25.4,26.6,'Cùng đếm nào!'],[27.0,28.3,'Một!'],[28.4,29.7,'Hai!'],[29.8,31.1,'Ba!'],[31.2,32.5,'Bốn!'],[32.6,33.8,'Năm!'],[34.0,37.6,'Bay lên nào! Wiii!'],[38.0,41.4,'Bé đếm giỏi lắm! Bye bye!']],
+  name:'Gà Con',sub:'Hẹn gặp lại bé nhé!',ep:'Đếm số 1 → 5'},
+ en:{caps:[[1.2,3.2,'Oops! The balloon flew away!'],[3.4,7.4,'One! Red balloon!'],[7.8,11.8,'Two! Yellow balloon!'],[12.2,16.2,'Three! Green balloon!'],[16.6,20.6,'Four! Blue balloon!'],[21.0,25.0,'Five! Purple balloon!'],[25.4,26.6,"Let's count!"],[27.0,28.3,'One!'],[28.4,29.7,'Two!'],[29.8,31.1,'Three!'],[31.2,32.5,'Four!'],[32.6,33.8,'Five!'],[34.0,37.6,'Up, up and away! Wheee!'],[38.0,41.4,'Great counting! Bye-bye!']],
+  name:'Little Chick',sub:'See you next time!',ep:'Count 1 → 5'}
+};
+EP.SHOTS=[
+ [0,3.4, 1.0,90,180, 1.05,90,185],
+ [3.4,25.4, 1.25,90,222, 1.25,90,222],
+ [25.4,34.0, 1.05,90,200, 1.15,90,196],
+ [34.0,38.0, 1.0,90,160, 1.0,90,160],
+ [38.0,99, 1.0,90,160, 1.0,90,160]];
+// chia nhỏ cảnh 3.4–25.4: mỗi quả bóng có cận thổi rồi trung khi nổi số
+(function(){const add=[];for(let k=0;k<5;k++){const b=3.4+k*4.4; add.push([b,b+1.6,1.8,92,206,1.9,92,204],[b+1.6,b+4.4,1.2,90,200,1.25,90,196]);} EP.SHOTS.splice(1,1,...add);})();
+const BC=['#F2545B','#FFB000','#3FAE5A','#45B6F0','#9B6CE0'];
+const ANCH=[[52,120],[72,96],[92,86],[112,96],[132,120]];
+function balloon(x,y,c,s,str){return `<g><path d="M${x} ${y+16*s} Q${x+4} ${(y+str[1])/2+10} ${str[0]} ${str[1]}" stroke="#7A7A8A" stroke-width=".8" fill="none"/><g transform="translate(${x} ${y}) scale(${s})"><ellipse rx="11" ry="13.5" fill="${c}" stroke="#fff" stroke-width="1.6"/><path d="M-2 13 L2 13 L0 16 Z" fill="${c}"/><ellipse cx="-4" cy="-5" rx="3" ry="4.5" fill="#fff" opacity=".45"/></g></g>`;}
+EP.main=function(t){
+  let w=sky(t)+hills()+grass(t);
+  const mv=window.ENV?mouthAt(t+INTRO):0;
+  // Gà Con bay lên cùng bóng
+  let lift=0; if(t>34){lift=eIn(prog(t,34,38))*190;} if(t>38){lift=190-Math.min(150,(t-38)*80); }
+  const cy=236-lift, beak=[92,cy-1];
+  let wl=0,wr=0,eyes='open',jump=0,sy=1;
+  // hook: quả bóng xì hơi bay lung tung
+  if(t<3.4){eyes='wow';
+    if(t<0.9){const sc=eOut(prog(t,0,0.9)); w+=balloon(beak[0],beak[1]-12*sc,BC[0],0.4+0.8*sc,[beak[0],beak[1]]);}
+    else{const u=(t-0.9)/2.5; const x=92+Math.sin(u*14)*60*(1-u*0.3), y=200-u*190+Math.cos(u*11)*30; w+=`<g transform="translate(${x} ${y}) rotate(${u*900}) scale(${1.1-u*0.7})"><ellipse rx="11" ry="13.5" fill="${BC[0]}"/></g>`;
+      w+=`<path d="M${x} ${y+12} q-6 8 -12 4" stroke="#fff" stroke-width="1.5" fill="none" opacity=".7"/>`;}}
+  // thổi từng quả: phồng 0.4s đầu, rồi bay lên vị trí neo
+  let B='';
+  for(let k=0;k<5;k++){const b=3.4+k*4.4; if(t<b)continue;
+    const inflate=eOut(prog(t,b,b+1.3)); const up=eIO(prog(t,b+1.4,b+2.2));
+    let [ax,ay]=ANCH[k]; ay+=Math.sin(t*1.6+k)*2; ax+=Math.sin(t*1.1+k*2)*1.5+gust(t)*1.5;
+    const bx=lerp(beak[0],ax,up), by=lerp(beak[1]-14*inflate,ay-lift,up);
+    const cnt=27+k*1.4; const sc=(0.35+0.75*inflate)*pulse(t,cnt,0.5)*pulse(t,b+1.6,0.5);
+    const holdX=t>b+2.2?(k<2?72:k>2?112:92):beak[0], holdY=t>b+2.2?cy+10:beak[1];
+    B+=balloon(bx,by,BC[k],sc,[holdX,holdY]);
+    if(t>cnt&&t<34){const s2=popScale(t,cnt); B+=`<g transform="translate(${bx} ${by-24}) scale(${s2})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="11" fill="#fff" stroke="${C.ink}" stroke-width="2.5" paint-order="stroke">${k+1}</text></g>`;}
+  }
+  for(let k=0;k<5;k++){const b=3.4+k*4.4; if(t>b&&t<b+1.3){sy=1+0.05*Math.sin(t*20); eyes='blink';} if(t>b+1.5&&t<b+3){eyes='happy'; wl=90;} }
+  for(let k=0;k<5;k++){const c=27+k*1.4; if(t>c&&t<c+0.4)jump=5*Math.sin(Math.PI*(t-c)/0.4);}
+  if(t>34){eyes='happy'; wl=150; wr=-150;}
+  if(t>38){const k=eOut(prog(t,38,38.4)); wr=-k*(100+25*Math.sin((t-38)*2*Math.PI*2)); wl=150;}
+  if(eyes==='open'&&(t%3.3)>3.15)eyes='blink';
+  w+=`<g transform="translate(92 ${cy}) rotate(${Math.sin(t*1.1)*2+(t>34?Math.sin(t*3)*6:0)} 0 50) scale(.56)">${chick({jump,wl,wr,eyes,sy,mouth:mv})}</g>`+B;
+  w+=wind(t);
+  let s=`<g transform="${cam(t)}">${w}</g>`;
+  for(let k=0;k<5;k++){const b=3.4+k*4.4; s+=bigNum(k+1,t,b+1.6,b+4.3);}
+  for(let k=0;k<5;k++){const c=27+k*1.4; s+=bigNum(k+1,t,c,c+(k<4?1.35:1.2));}
+  if(t>34&&t<40){const cols=BC;
+    for(let i=0;i<50;i++){const st=34+rnd(i)*1.2; if(t<st)continue; const u=t-st; const x=rnd(i+9)*180+Math.sin(u*3+i)*6; const y=-10+u*(55+rnd(i+3)*40); if(y>330)continue;
+      s+=`<rect x="${x}" y="${y}" width="3.2" height="5" fill="${cols[i%5]}" transform="rotate(${(u*300+i*40)%360} ${x+1.6} ${y+2.5})"/>`;}}
+  return s;
+};

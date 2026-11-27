@@ -122,6 +122,61 @@ function sky(t,sunY=56){
 function hills(){return `<path d="M-40 262 Q60 238 120 258 T220 250 L220 340 L-40 340 Z" fill="${C.ground2}"/><path d="M-40 276 Q90 254 220 276 L220 340 L-40 340 Z" fill="${C.ground}"/>`;}
 
 function mouthAt(T){const E=window.ENV;if(!E)return 0;const i=Math.round(T*100);let e=0;for(let k=i-2;k<=i+2;k++)if(E[k]>e)e=E[k];return clamp((e-0.08)/0.55);}
+
+/* ---------- bạn bè dùng chung (Vịt đứng, đầu con vật, Ếch) ---------- */
+function duckStand(x,y,o){
+  const {s=1,flap=0,quack=0,eyes='open'}=o;
+  let g=`<g transform="translate(${x} ${y}) scale(${-s} ${s})">`;
+  g+=`<ellipse cx="0" cy="13" rx="15" ry="3" fill="#000" opacity=".12"/><ellipse cx="-5" cy="11" rx="4" ry="2" fill="${C.beak}"/><ellipse cx="5" cy="11" rx="4" ry="2" fill="${C.beak}"/>`;
+  g+=`<path d="M-12 -2 L-19 -8 L-15 1 Z" fill="#FFE27A"/><ellipse cx="0" cy="0" rx="14" ry="10.5" fill="#FFE27A"/>`;
+  g+=`<g transform="rotate(${-flap*50} -2 -3)"><ellipse cx="-3" cy="-1" rx="7.5" ry="5" fill="#FFD23F"/></g>`;
+  g+=`<circle cx="8" cy="-11" r="8" fill="#FFE27A"/><path d="M6 -19 q2 -6 5 -1 q2 -5 4 0" fill="#45B6F0"/>`;
+  if(eyes==='happy') g+=`<path d="M8 -13 q2.2 -2.6 4.4 0" stroke="${C.eye}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+  else if(eyes==='sad') g+=`<circle cx="10.5" cy="-12" r="1.9" fill="${C.eye}"/><path d="M8 -16.5 l5 1.2" stroke="${C.eye}" stroke-width="1.1" stroke-linecap="round"/>`;
+  else g+=`<circle cx="10.5" cy="-12.5" r="1.9" fill="${C.eye}"/><circle cx="11.1" cy="-13.2" r=".6" fill="#fff"/>`;
+  g+=`<circle cx="8" cy="-8" r="1.8" fill="${C.cheek}" opacity=".8"/>`;
+  const q=quack*3;
+  g+=`<path d="M14 ${-10-q*.3} q6 -1 8 ${1-q*.2} q-4 1.5 -8 1 Z" fill="${C.beak}"/><path d="M14 ${-8.5+q*.2} q5 ${0.5+q} 7 ${1.5+q*.6} q-4 0.5 -7 -0.5 Z" fill="#F27A1F"/>`;
+  return g+'</g>';
+}
+function animal(k,talk,blink){
+  const m=clamp(talk); let s='';
+  const eye=(x,y)=> blink?`<path d="M${x-3} ${y} h6" stroke="${C.eye}" stroke-width="2" stroke-linecap="round"/>`:`<circle cx="${x}" cy="${y}" r="3.2" fill="${C.eye}"/><circle cx="${x+1}" cy="${y-1.2}" r="1" fill="#fff"/>`;
+  const mouth=(y,c)=>m>0.08?`<ellipse cx="0" cy="${y+2*m}" rx="${3+2*m}" ry="${1+4*m}" fill="#B23A48"/>`:`<path d="M-4 ${y} q2 2 4 0 q2 2 4 0" stroke="${c}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+  if(k===0){ // mèo
+    s+=`<path d="M-20 -8 L-16 -30 L-4 -18 Z M20 -8 L16 -30 L4 -18 Z" fill="#FF9F43"/><path d="M-16 -12 L-14 -24 L-8 -17 Z M16 -12 L14 -24 L8 -17 Z" fill="#FFC6A5"/>`;
+    s+=`<circle r="22" fill="#FFB25B"/><path d="M-6 -21 l2 7 M0 -22 l0 7 M6 -21 l-2 7" stroke="#E8873A" stroke-width="2.4" stroke-linecap="round"/>`;
+    s+=eye(-8,-3)+eye(8,-3)+`<path d="M-2.5 4 L2.5 4 L0 7 Z" fill="#FF7A9A"/>`+mouth(9,C.eye);
+    s+=`<path d="M-10 6 h-12 M-10 9 l-11 3 M10 6 h12 M10 9 l11 3" stroke="${C.eye}" stroke-width="1" opacity=".6"/>`;
+  } else if(k===1){ // chó
+    s+=`<circle r="22" fill="#D29E6B"/><ellipse cx="-21" cy="-2" rx="7" ry="15" transform="rotate(18 -21 -2)" fill="#8B5A3C"/><ellipse cx="21" cy="-2" rx="7" ry="15" transform="rotate(-18 21 -2)" fill="#8B5A3C"/>`;
+    s+=`<ellipse cx="0" cy="8" rx="12" ry="9" fill="#F1D7B5"/>`+eye(-8,-5)+eye(8,-5)+`<ellipse cx="0" cy="3" rx="4" ry="3" fill="${C.eye}"/>`;
+    s+= m>0.08?`<ellipse cx="0" cy="${11+2*m}" rx="${3.5+2*m}" ry="${1+4*m}" fill="#B23A48"/><ellipse cx="0" cy="${13+4*m}" rx="3" ry="${1.5+2*m}" fill="#FF7A9A"/>`:mouth(10,C.eye);
+  } else if(k===2){ // bò
+    s+=`<path d="M-14 -18 q-6 -10 -2 -14 q3 6 7 9 Z M14 -18 q6 -10 2 -14 q-3 6 -7 9 Z" fill="#F5E6C8"/>`;
+    s+=`<ellipse cx="-24" cy="-8" rx="8" ry="4.5" transform="rotate(-20 -24 -8)" fill="#fff"/><ellipse cx="24" cy="-8" rx="8" ry="4.5" transform="rotate(20 24 -8)" fill="#fff"/>`;
+    s+=`<ellipse rx="21" ry="22" fill="#FFFFFF"/><path d="M-21 -8 q8 -10 14 -4 q-2 10 -14 10 Z" fill="#2E2A3B"/><circle cx="12" cy="-14" r="5" fill="#2E2A3B"/>`;
+    s+=eye(-8,-3)+eye(8,-3)+`<ellipse cx="0" cy="11" rx="14" ry="9" fill="#FFB3C1"/><ellipse cx="-5" cy="9" rx="2" ry="2.6" fill="#C9677E"/><ellipse cx="5" cy="9" rx="2" ry="2.6" fill="#C9677E"/>`;
+    if(m>0.08)s+=`<ellipse cx="0" cy="${15+m}" rx="${4+2*m}" ry="${1+3*m}" fill="#B23A48"/>`;
+  } else { // cừu
+    for(let i=0;i<10;i++){const a=i/10*Math.PI*2; s+=`<circle cx="${Math.cos(a)*19}" cy="${Math.sin(a)*19-2}" r="9" fill="#FFFFFF"/>`;}
+    s+=`<ellipse cx="-17" cy="0" rx="7" ry="3.5" transform="rotate(25 -17 0)" fill="#5D5A6B"/><ellipse cx="17" cy="0" rx="7" ry="3.5" transform="rotate(-25 17 0)" fill="#5D5A6B"/>`;
+    s+=`<ellipse cx="0" cy="2" rx="13" ry="16" fill="#6E6A80"/><circle cx="0" cy="-14" r="8" fill="#FFFFFF"/><circle cx="-7" cy="-12" r="6" fill="#FFFFFF"/><circle cx="7" cy="-12" r="6" fill="#FFFFFF"/>`;
+    s+=eye(-5,0).replace(/#2E2A3B/g,'#fff').replace('fill="#fff"/>','fill="#2E2A3B"/>')+eye(5,0).replace(/#2E2A3B/g,'#fff').replace('fill="#fff"/>','fill="#2E2A3B"/>');
+    s+= m>0.08?`<ellipse cx="0" cy="${10+m}" rx="${3+2*m}" ry="${1+3*m}" fill="#B23A48"/>`:`<path d="M-3 10 q3 2 6 0" stroke="#fff" stroke-width="1.4" fill="none"/>`;
+  }
+  return s;
+}
+function frog(x,y,o){
+  const {puff=0,blink=false,jumpK=0}=o; let g=`<g transform="translate(${x} ${y})">`;
+  g+=`<ellipse cx="0" cy="9" rx="13" ry="2.5" fill="#000" opacity=".12"/>`;
+  g+=`<ellipse cx="-10" cy="6" rx="6" ry="3.4" fill="#5AB43C"/><ellipse cx="10" cy="6" rx="6" ry="3.4" fill="#5AB43C"/>`;
+  g+=`<ellipse cx="0" cy="0" rx="13" ry="${9+jumpK*2}" fill="#6CC24A"/><ellipse cx="0" cy="3" rx="8" ry="5" fill="#A6E07A"/>`;
+  if(puff>0)g+=`<ellipse cx="0" cy="6" rx="${4+5*puff}" ry="${3+4*puff}" fill="#C9F0A8"/>`;
+  [-6,6].forEach(ex=>{g+=`<circle cx="${ex}" cy="-8" r="5" fill="#6CC24A"/>`+(blink?`<path d="M${ex-3} -8 h6" stroke="${C.eye}" stroke-width="1.4" stroke-linecap="round"/>`:`<circle cx="${ex}" cy="-8" r="3.2" fill="#fff"/><circle cx="${ex+.5}" cy="-7.6" r="1.8" fill="${C.eye}"/>`);});
+  g+=`<path d="M-5 -1 q5 4 10 0" stroke="${C.eye}" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="-8" cy="1" r="1.6" fill="${C.cheek}" opacity=".7"/><circle cx="8" cy="1" r="1.6" fill="${C.cheek}" opacity=".7"/>`;
+  return g+'</g>';
+}
 /* ---------- camera ---------- */
 const SHOTS=EP.SHOTS;
 function cam(t){

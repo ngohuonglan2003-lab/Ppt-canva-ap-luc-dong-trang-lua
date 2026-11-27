@@ -1,0 +1,10 @@
+import sys; sys.path.insert(0,'.')
+from sfxlib import *
+O=4.0; T=Track(41.0); music(T,seed_variant=1); intro_sfx(T); ambience(T)
+T.add('sfx',0.3+O,whoosh(1.0),.4); T.add('sfx',1.3+O,ting(2093),.3)
+for k in range(10): T.add('sfx',3.4+k*0.25+O,ting(2093+k*80,0.5),.12)
+T.add('sfx',7.3+O,boing(0.3),.3); T.add('sfx',11.4+O,gong(),.5)
+T.add('sfx',15.4+O,pop(),.6); T.add('sfx',15.45+O,ting(1568),.3)
+for k,f in enumerate([1047,1319,1568]): T.add('sfx',21+k*1.5-0.4+O,whoosh(0.4),.25); T.add('sfx',21+k*1.5+O,ting(f),.45)
+for k in range(8): T.add('sfx',26.3+k*0.18+O,crackle(0.3),.35)
+applause(T,26.3+O,2.5); outro_sfx(T,34.6+O); T.write('music_sfx_ep10.wav'); print('ok10')

@@ -1,0 +1,89 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#000}
+#stage{position:relative;width:720px;height:1280px;overflow:hidden;font-family:'Baloo 2',sans-serif}
+#svg{position:absolute;inset:0;width:720px;height:1280px}
+#cap{position:absolute;left:50%;top:64px;transform-origin:50% 50%;background:#fff;color:#1D3557;border-radius:44px;padding:18px 40px 10px;font-weight:800;font-size:62px;line-height:1.08;text-align:center;width:max-content;max-width:600px;box-shadow:0 8px 0 rgba(29,53,87,.18)}
+#cap::after{content:"";position:absolute;left:30%;bottom:-26px;border:16px solid transparent;border-top:20px solid #fff}
+#logo{position:absolute;left:0;right:0;top:190px;text-align:center;font-weight:800;font-size:150px;line-height:1;color:#FFCC33;white-space:nowrap}
+#logo span{display:inline-block;transform-origin:50% 90%;text-shadow:0 7px 0 #1D3557,5px 0 0 #1D3557,-5px 0 0 #1D3557,0 -5px 0 #1D3557,4px 4px 0 #1D3557,-4px 4px 0 #1D3557,4px -4px 0 #1D3557,-4px -4px 0 #1D3557}
+#ep{position:absolute;left:50%;top:385px;transform-origin:50% 50%;background:#F2545B;color:#fff;border-radius:40px;padding:14px 38px 6px;font-weight:800;font-size:60px;white-space:nowrap;box-shadow:0 7px 0 #B8323A}
+#flash{position:absolute;inset:0;background:#fff;pointer-events:none}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#9EDCFF;color:#1D3557;text-align:center}
+#end .n{font-size:120px;font-weight:800;line-height:1}
+#end .s{font-size:64px;font-weight:700;color:#fff;text-shadow:0 4px 0 #1D3557,3px 0 0 #1D3557,-3px 0 0 #1D3557,0 -3px 0 #1D3557}
+</style></head>
+<body><div id="stage"><svg id="svg" viewBox="0 0 180 320"></svg><div id="logo"></div><div id="ep"></div><div id="cap"></div><div id="end"><svg id="endsvg" viewBox="-80 -90 160 170" width="360" height="380"></svg><div class="n" id="endName"></div><div class="s" id="endSub"></div></div><div id="flash"></div></div>
+<script>
+// Tập 8 · Ú òa! / Peekaboo! — trò chơi bất ngờ, tương tác với bé
+const EP={INTRO:4,MAIN:37,END:34.6};
+EP.LANG={
+ vi:{caps:[[1.2,3.2,'Gà Con đâu rồi?'],[3.4,5.6,'Ú òa!'],[6.0,8.4,'Ai trốn dưới khăn thế?'],[8.8,11.4,'Ú òa! Là bạn Vịt!'],[12.0,14.4,'Ai trốn sau lá thế?'],[14.8,17.4,'Ú òa! Là bạn Ếch!'],[18.0,20.4,'Ai trốn sau chậu hoa?'],[20.8,23.4,'Ú òa! Là bạn Mèo!'],[24.0,27.4,'Bé ơi, bé đâu rồi?'],[27.8,30.4,'Ú òa! Thấy bé rồi!'],[30.8,34.4,'Cùng chơi ú òa nhé! Bye bye!']],
+  name:'Gà Con',sub:'Hẹn gặp lại bé nhé!',ep:'Ú òa!'},
+ en:{caps:[[1.2,3.2,"Where's Little Chick?"],[3.4,5.6,'Peekaboo!'],[6.0,8.4,"Who's under the blanket?"],[8.8,11.4,"Peekaboo! It's Duckie!"],[12.0,14.4,"Who's behind the leaf?"],[14.8,17.4,"Peekaboo! It's Froggy!"],[18.0,20.4,"Who's behind the pot?"],[20.8,23.4,"Peekaboo! It's Kitty!"],[24.0,27.4,'Where are you, baby?'],[27.8,30.4,'Peekaboo! I see you!'],[30.8,34.4,"Let's play peekaboo! Bye-bye!"]],
+  name:'Little Chick',sub:'See you next time!',ep:'Peekaboo!'}
+};
+EP.SHOTS=[
+ [0,6.0, 1.7,90,222, 1.85,90,220],
+ [6.0,12.0, 1.55,90,268, 1.65,90,266],
+ [12.0,18.0, 1.55,50,268, 1.65,48,266],
+ [18.0,24.0, 1.55,130,268, 1.65,132,266],
+ [24.0,30.6, 1.9,90,218, 2.1,90,216],
+ [30.6,99, 1.05,90,252, 1.15,90,252]];
+const HIDE=[6.0,12.0,18.0], REVEAL=[8.8,14.8,20.8];
+function blanket(t,lift){ // khăn chấm bi trùm bạn Vịt
+  const wob=t>HIDE[0]&&t<REVEAL[0]?Math.sin(t*12)*2:0;
+  if(lift>=1)return '';
+  const y=-lift*90, r=lift*40;
+  return `<g transform="translate(90 ${300+y}) rotate(${r}) "><path d="M-26 6 Q-24 ${-28+wob} 0 ${-32-wob} Q24 ${-28+wob} 26 6 Q0 12 -26 6 Z" fill="#F2545B"/>`+[[-12,-10],[6,-20],[14,-4],[-2,0],[-16,-24]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3" fill="#fff"/>`).join('')+'</g>';
+}
+function bigLeaf(t,open){
+  const wob=t>HIDE[1]&&t<REVEAL[1]?Math.sin(t*14)*4:Math.sin(t*1.5)*2;
+  const a=-open*70+wob;
+  return `<g transform="translate(30 304) rotate(${a})"><path d="M0 0 C -30 -10, -26 -52, 0 -62 C 26 -52, 30 -10, 0 0 Z" fill="#3FAE5A"/><path d="M0 0 L0 -58" stroke="#2F9A4E" stroke-width="2"/></g>`;
+}
+function pot(t){
+  const wob=t>HIDE[2]&&t<REVEAL[2]?Math.sin(t*16)*3:0;
+  return `<g transform="translate(${150+wob} 304)"><path d="M-18 -26 L18 -26 L13 0 L-13 0 Z" fill="#E07A3A"/><rect x="-20" y="-30" width="40" height="7" rx="2" fill="#C9652B"/>`+
+   `<path d="M0 -30 L-4 -52 M0 -30 L6 -50 M0 -30 L-10 -44" stroke="#3FAE5A" stroke-width="2"/><circle cx="-4" cy="-54" r="5" fill="#FF8FA8"/><circle cx="6" cy="-52" r="5" fill="#FFCC33"/><circle cx="-10" cy="-46" r="4" fill="#45B6F0"/></g>`;
+}
+EP.main=function(t){
+  let w=sky(t)+hills()+grass(t);
+  const mv=window.ENV?mouthAt(t+INTRO):0;
+  // bạn Ếch (sau lá) và bạn Mèo (sau chậu) — vẽ trước để bị che
+  const pop=(r)=>t<r?0:eBack(prog(t,r,r+0.45));
+  const happy=(r)=>t>r;
+  const pf=pop(REVEAL[1]); w+=frog(30,lerp(296,288,pf),{puff:t>REVEAL[1]&&t<REVEAL[1]+0.6?Math.sin(Math.PI*(t-REVEAL[1])/0.6):0,blink:false,jumpK:0});
+  const pc=pop(REVEAL[2]); w+=`<g transform="translate(150 ${lerp(292,238,pc)}) scale(.8)">${animal(0,t>REVEAL[2]&&t<REVEAL[2]+0.8?Math.abs(Math.sin((t-REVEAL[2])*9)):0,false)}</g>`;
+  w+=bigLeaf(t,pf)+pot(t);
+  // bạn Vịt dưới khăn
+  const pd=pop(REVEAL[0]); w+=duckStand(90,296-pd*4,{s:1.25,flap:t>REVEAL[0]&&t<REVEAL[0]+1?Math.abs(Math.sin(t*10)):0,eyes:happy(REVEAL[0])?'happy':'open',quack:t>REVEAL[0]&&t<REVEAL[0]+0.6?Math.sin(Math.PI*(t-REVEAL[0])/0.6):0});
+  w+=blanket(t,t<REVEAL[0]?0:eOut(prog(t,REVEAL[0],REVEAL[0]+0.7)));
+  // Gà Con: che mắt (cánh trước mặt) rồi ú òa
+  let wl=0, wr=0, eyes='happy', jump=0, cover=0;
+  const coverK=(a,b)=> t>a&&t<b ? eOut(prog(t,a,a+0.3))*(1-eIn(prog(t,b-0.15,b))) : 0;
+  cover=Math.max(coverK(0.2,3.4),coverK(24.4,27.8));
+  if(cover>0){wl=-75*cover; wr=75*cover; eyes='happy';}
+  for(const r of [3.4,...REVEAL,27.8]) if(t>r&&t<r+0.8){wl=110;wr=-110;jump=10*Math.sin(Math.PI*(t-r)/0.8);eyes='happy';}
+  for(const h of HIDE) if(t>h&&t<h+2.6){eyes='open'; if((t%3.3)>3.15)eyes='blink';}
+  if(t>30.8){const k=eOut(prog(t,30.8,31.2)); wr=-k*(100+25*Math.sin((t-30.8)*2*Math.PI*2)); jump=3*Math.abs(Math.sin(t*5));}
+  const mouthG=mv;
+  w+=`<g transform="translate(90 214) rotate(${Math.sin(t*1.1)*2} 0 50) scale(.5)">${chick({jump,wl,wr,eyes,mouth:mouthG})}</g>`;
+  // tay che mặt: thêm 2 cánh lớn trước mắt khi cover
+  if(cover>0.05){const k=cover; w+=`<g transform="translate(90 214) scale(.5)"><ellipse cx="${-22+ (1-k)*-30}" cy="-12" rx="17" ry="13" fill="${C.wing}" opacity="${k}"/><ellipse cx="${22+(1-k)*30}" cy="-12" rx="17" ry="13" fill="${C.wing}" opacity="${k}"/></g>`;}
+  // dấu ? khi tìm
+  for(const h of HIDE){if(t>h+0.6&&t<h+2.8){const sc=popScale(t,h+0.6); const x=h===HIDE[0]?90:(h===HIDE[1]?30:150); w+=`<g transform="translate(${x} 248) scale(${sc}) rotate(${Math.sin(t*8)*10})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="24" fill="${C.ink}" stroke="#fff" stroke-width="4" paint-order="stroke">?</text></g>`;}}
+  w+=wind(t);
+  let s=`<g transform="${cam(t)}">${w}</g>`;
+  // sao lấp lánh khi ú òa
+  for(const r of [3.4,...REVEAL,27.8]) if(t>r&&t<r+0.9){const u=(t-r)/0.9; for(let i=0;i<8;i++){const a=i/8*Math.PI*2; s+=`<path transform="translate(${90+Math.cos(a)*70*u} ${190+Math.sin(a)*70*u}) scale(${1.6*(1-u)})" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#FFD84D"/>`;}}
+  if(t>27.8&&t<33){const cols=['#F2545B','#45B6F0','#FFCC33','#3FAE5A','#FF8FA8'];
+    for(let i=0;i<50;i++){const st=27.8+rnd(i)*1.2; if(t<st)continue; const u=t-st; const x=rnd(i+9)*180+Math.sin(u*3+i)*6; const y=-10+u*(55+rnd(i+3)*40); if(y>330)continue;
+      s+=`<rect x="${x}" y="${y}" width="3.2" height="5" fill="${cols[i%5]}" transform="rotate(${(u*300+i*40)%360} ${x+1.6} ${y+2.5})"/>`;}}
+  return s;
+};
+
+</script>
+<script src="engine.js"></script></body></html>

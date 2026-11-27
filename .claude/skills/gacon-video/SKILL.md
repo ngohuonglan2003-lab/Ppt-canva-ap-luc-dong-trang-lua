@@ -22,11 +22,12 @@ Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dù
 3. Người dùng gửi **1 file giọng** (thường gồm cả bản tiếng Anh lẫn tiếng Việt, đọc liền). Tách câu, đặt vào mốc, nhép miệng, hạ nhạc dưới giọng. Xem mục "Ghép giọng".
 4. Khi người dùng nhắn **"được rồi" / "xuất giúp"**, làm đủ cho cả 2 ngôn ngữ:
    - Xuất video chuẩn 1080×1920, 30 fps (bỏ chữ `preview`).
-   - Làm 2 ảnh bìa bằng `thumb.js`.
+   - **KHÔNG làm ảnh bìa nữa** (người dùng đã bỏ). `thumb.js` vẫn còn nếu sau này cần.
    - Viết caption và hashtag cho **YouTube Shorts** và **TikTok** (mẫu ở `references/caption_mau_tap1.md`).
 
 ## Cấu trúc file
 - `scripts/engine.js`: phần dùng chung. Gồm Gà Con `chick()`, táo, mặt trời có mặt, chim bay, gió (cỏ, hoa, lá bay, vệt gió), mây, đồi, intro 4 giây (logo bật từng chữ và nhãn tập), máy quay `cam()` theo bảng SHOTS, số to `bigNum()`, phụ đề, màn kết, nhép miệng `mouthAt()`.
+- **Bạn bè dùng chung trong engine:** `duckStand(x,y,{s,flap,quack,eyes})`, `animal(k,talk,blink)` (0 mèo, 1 chó, 2 bò, 3 cừu; chỉ vẽ đầu, muốn có thân thì thêm ellipse), `frog(x,y,{puff,blink,jumpK})`. Bạn Dê ở tập 10.
 - `chick(o)` nhận: `sy, jump, wl, wr` (cánh: wl dương / wr âm là giơ lên), `eyes` ('open'|'wow'|'happy'|'blink'|'sleep'|'sad'), `mouth` 0–1, `hat` (mũ Noel), `body` (đổi màu thân).
 - `scripts/mk_ep.py`: ghép `epN_body.js` (chỉ phần JS của tập) với phần đầu HTML chung thành `epN_*.html`: `python3 mk_ep.py ep7_body.js ep7_ten.html`. Sửa tập thì **sửa file body rồi chạy lại mk_ep**.
 - Các tập đã có (body và html trong `episodes/`):
@@ -36,6 +37,11 @@ Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dù
   4. Chia bánh (Gà Con và bạn Vịt, bánh bẻ đôi, vết cắn)
   5. Mưa rơi tí tách (ru ngủ: mưa, nấm, ếch, cầu vồng, ngủ)
   6. Noel (tuyết, cây thông nháy đèn, 3 hộp quà và đồ chơi, Gà Con đội mũ Noel)
+  7. Vỗ tay: bài hát riêng của kênh, nhảy theo nhịp 110 BPM. Mỗi đoạn một động tác (vỗ tay, dậm chân, lắc lư, xoay tròn), chữ tượng thanh bật theo phách, bạn bè lần lượt vào nhảy.
+  8. Ú òa: 3 chỗ trốn xếp thành hàng dưới (lá, khăn, chậu hoa), cuối tập Gà Con chơi ú òa với bé.
+  9. Năm mới: nền đêm, đồng hồ có mặt, đếm ngược 3–2–1, pháo hoa, chữ "2027", mũ tiệc.
+  10. Tết: năm Mùi 2027 có bạn Dê, hoa mai nở, đèn lồng, bánh chưng, đếm 3 bao lì xì, băng rôn chúc Tết.
+  11. Bóng bay: thổi 5 quả bóng 5 màu (bóng có viền trắng để không lẫn vào thân vàng), đếm 1–5, cuối tập bóng nhấc Gà Con bay lên.
 - `episodes/epN_*.html`: mỗi tập chỉ khai báo `EP={INTRO,MAIN,END}`, `EP.LANG` (phụ đề vi/en, tên kênh, nhãn tập), `EP.SHOTS` và `EP.main(t)` (cảnh riêng). Tập mới thì **copy ep2 làm mẫu**. Bỏ `engine.js` cạnh file html.
 - `scripts/render.js`: xuất MP4 bằng Playwright và ffmpeg. Tham số: `lang out.mp4 audio.wav [preview]`; biến môi trường `EP_FILE`, `DUR`. Tự nạp `voice/env_<lang>.json` nếu có để nhép miệng.
 - `scripts/keys3.js`: chụp nhanh nhiều khung để kiểm tra (`node keys3.js ep.html vi 2,5.2,13 out`). Thời gian tính cả intro.
@@ -87,7 +93,9 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
 - **Màu nền màn kết:** đổi một lần trong main: `document.getElementById('end').style.background=...`.
 - **Câu thoại của nhân vật phụ:** khai báo khoảng thời gian (ví dụ `SP=[[24.2,27.6]]`) rồi dùng `mouthAt` cho mỏ nhân vật đó thay vì Gà Con.
 - **Tập ru ngủ:** nhạc `bpm=72`, giảm nhạc (`T.mus*=0.75`, `mus_gain=0.28`), ít cắt cảnh, máy đẩy chậm, cuối video tối dần, không có pháo giấy.
-- **Âm thanh mới trong sfxlib:** `rain_bed`, `drip`, `ribbit`, `crack`, `munch`, `bells`, `sleigh` (chuông Noel theo nhịp), `quack`, `splash`, `bubbles`, `step`.
+- **Âm thanh mới trong sfxlib:** `rain_bed`, `drip`, `ribbit`, `crack`, `munch`, `bells`, `sleigh` (chuông Noel theo nhịp), `quack`, `splash`, `bubbles`, `step`, `clap`, `tick`, `boom`, `crackle` (pháo hoa), `deflate` (bóng xì hơi), `inflate`, `gong`.
+- **Bài hát theo nhịp:** `BEAT=60/110`. Pha phách = `((t+INTRO)/BEAT)%1` vì nhạc bắt đầu ở giây 0 của video. Động tác và tiếng hiệu ứng đặt đúng các phách.
+- **Vật cùng màu với Gà Con** (bóng vàng, vịt vàng) cần viền trắng hoặc đổi tông, và phải vẽ sau Gà Con nếu nằm trước người.
 
 ## Phụ đề và chữ
 - Bong bóng phụ đề rộng tối đa 600px. Dùng ` ` để giữ cụm không bị xuống dòng (`Bye bye!`, `Giỏi quá!`).
