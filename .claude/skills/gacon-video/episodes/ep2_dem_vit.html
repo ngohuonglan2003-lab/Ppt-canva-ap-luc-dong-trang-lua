@@ -1,0 +1,167 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#000}
+#stage{position:relative;width:720px;height:1280px;overflow:hidden;font-family:'Baloo 2',sans-serif}
+#svg{position:absolute;inset:0;width:720px;height:1280px}
+#cap{position:absolute;left:50%;top:64px;transform-origin:50% 50%;background:#fff;color:#1D3557;border-radius:44px;padding:18px 40px 10px;font-weight:800;font-size:62px;line-height:1.08;text-align:center;width:max-content;max-width:600px;box-shadow:0 8px 0 rgba(29,53,87,.18)}
+#cap::after{content:"";position:absolute;left:30%;bottom:-26px;border:16px solid transparent;border-top:20px solid #fff}
+#logo{position:absolute;left:0;right:0;top:190px;text-align:center;font-weight:800;font-size:150px;line-height:1;color:#FFCC33;white-space:nowrap}
+#logo span{display:inline-block;transform-origin:50% 90%;text-shadow:0 7px 0 #1D3557,5px 0 0 #1D3557,-5px 0 0 #1D3557,0 -5px 0 #1D3557,4px 4px 0 #1D3557,-4px 4px 0 #1D3557,4px -4px 0 #1D3557,-4px -4px 0 #1D3557}
+#ep{position:absolute;left:50%;top:385px;transform-origin:50% 50%;background:#F2545B;color:#fff;border-radius:40px;padding:14px 38px 6px;font-weight:800;font-size:60px;white-space:nowrap;box-shadow:0 7px 0 #B8323A}
+#flash{position:absolute;inset:0;background:#fff;pointer-events:none}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#9EDCFF;color:#1D3557;text-align:center}
+#end .n{font-size:120px;font-weight:800;line-height:1}
+#end .s{font-size:64px;font-weight:700;color:#fff;text-shadow:0 4px 0 #1D3557,3px 0 0 #1D3557,-3px 0 0 #1D3557,0 -3px 0 #1D3557}
+</style></head>
+<body><div id="stage"><svg id="svg" viewBox="0 0 180 320"></svg><div id="logo"></div><div id="ep"></div><div id="cap"></div><div id="end"><svg id="endsvg" viewBox="-80 -90 160 170" width="360" height="380"></svg><div class="n" id="endName"></div><div class="s" id="endSub"></div></div><div id="flash"></div></div>
+<script>
+const EP={INTRO:4,MAIN:45,END:43.0};
+EP.LANG={
+ vi:{caps:[[1.2,3.0,'Ui! Ai té nước thế?'],[3.2,6.5,'Một chú vịt con!'],[6.5,8.5,'Một!'],[10.0,13.0,'Hai chú vịt con!'],[13.0,15.0,'Hai!'],[16.0,19.0,'Ba chú vịt con!'],[19.0,21.0,'Ba!'],[23.0,26.0,'Bốn chú vịt con!'],[26.0,28.0,'Bốn!'],[28.2,29.4,'Cùng đếm nào!'],[29.5,30.9,'Một…'],[31.0,32.4,'Hai…'],[32.5,33.9,'Ba…'],[34.0,35.4,'Bốn!'],[35.6,39.8,'Bốn chú vịt con! Giỏi quá!'],[40.0,43.0,'Bé đếm giỏi lắm! Bye bye!']],
+  name:'Gà Con',sub:'Hẹn gặp lại bé nhé!',ep:'Đếm số 1 · 2 · 3 · 4'},
+ en:{caps:[[1.2,3.0,'Splash! Who is there?'],[3.2,6.5,'One little duck!'],[6.5,8.5,'One!'],[10.0,13.0,'Two little ducks!'],[13.0,15.0,'Two!'],[16.0,19.0,'Three little ducks!'],[19.0,21.0,'Three!'],[23.0,26.0,'Four little ducks!'],[26.0,28.0,'Four!'],[28.2,29.4,"Let's count!"],[29.5,30.9,'One…'],[31.0,32.4,'Two…'],[32.5,33.9,'Three…'],[34.0,35.4,'Four!'],[35.6,39.8,'Four little ducks! Hooray!'],[40.0,43.0,'Great counting! Bye-bye!']],
+  name:'Little Chick',sub:'See you next time!',ep:'Count 1 · 2 · 3 · 4'}
+};
+EP.SHOTS=[
+ [0,1.0, 1.25,95,250, 1.3,95,252],
+ [1.0,3.0, 1.55,64,245, 1.65,62,245],
+ [3.0,6.5, 1.8,92,272, 1.95,92,274],
+ [6.5,8.5, 1.5,66,245, 1.55,66,245],
+ [8.5,10.0, 1.2,110,250, 1.25,112,252],
+ [10.0,13.0, 1.8,113,272, 1.9,114,274],
+ [13.0,15.0, 1.5,66,245, 1.55,66,245],
+ [15.0,16.0, 1.2,105,250, 1.25,108,252],
+ [16.0,19.0, 1.8,138,272, 1.95,138,274],
+ [19.0,21.0, 1.5,66,245, 1.55,66,245],
+ [21.0,23.0, 1.3,140,255, 1.35,145,258],
+ [23.0,26.0, 1.8,160,272, 1.9,162,274],
+ [26.0,28.0, 1.5,66,245, 1.55,66,245],
+ [28.0,35.5, 1.05,90,255, 1.15,92,258],
+ [35.5,40.0, 1.1,90,255, 1.25,92,258],
+ [40.0,99, 1.3,85,255, 1.35,85,255]];
+
+// ---- episode 2 scene: pond + 4 ducklings ----
+const CH={x:52,y:236,s:.62};
+const DS=[[102,292],[124,285],[146,292],[167,285]];
+const DCOL=['#F2545B','#45B6F0','#3FAE5A','#B06CE0'];
+const W1='#6CC7F0', W2='#4FB3E3';
+function duck(x,y,o){
+  const {s:s0=1,rot=0,flap=0,quack=0,tuft='#F2545B',water=true,eyes='open'}=o;
+  const s=s0*1.05; let g=`<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})">`;
+  if(water) g+=`<ellipse cx="0" cy="7" rx="${17+Math.sin(x)*1}" ry="3.2" fill="none" stroke="#fff" stroke-width="1.2" opacity=".7"/>`;
+  g+=`<path d="M-12 -2 L-19 -8 L-15 1 Z" fill="#FFE27A"/>`;
+  g+=`<ellipse cx="0" cy="0" rx="14" ry="9.5" fill="#FFE27A"/>`;
+  g+=`<g transform="rotate(${-flap*40} -2 -3)"><ellipse cx="-3" cy="-1" rx="7.5" ry="5" fill="#FFD23F"/></g>`;
+  g+=`<circle cx="8" cy="-11" r="8" fill="#FFE27A"/>`;
+  g+=`<path d="M6 -19 q2 -6 5 -1 q2 -5 4 0" fill="${tuft}"/>`;
+  if(eyes==='happy') g+=`<path d="M8 -13 q2.2 -2.6 4.4 0" stroke="${C.eye}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+  else g+=`<circle cx="10.5" cy="-12.5" r="1.9" fill="${C.eye}"/><circle cx="11.1" cy="-13.2" r=".6" fill="#fff"/>`;
+  g+=`<circle cx="8" cy="-8" r="1.8" fill="${C.cheek}" opacity=".8"/>`;
+  const q=quack*3;
+  g+=`<path d="M14 ${-10-q*.3} q6 -1 8 ${1-q*.2} q-4 1.5 -8 1 Z" fill="${C.beak}"/>`;
+  g+=`<path d="M14 ${-8.5+q*.2} q5 ${0.5+q} 7 ${1.5+q*.6} q-4 0.5 -7 -0.5 Z" fill="#F27A1F"/>`;
+  if(water) g+=`<path d="M-20 5 Q-10 8 0 5 T20 5 L20 14 L-20 14 Z" fill="${W1}"/>`;
+  else g+=`<ellipse cx="-4" cy="10" rx="3" ry="1.6" fill="${C.beak}"/><ellipse cx="4" cy="10" rx="3" ry="1.6" fill="${C.beak}"/>`;
+  return g+'</g>';
+}
+function splash(t,t0,x,y,n=9,pow=1){
+  if(t<t0||t>t0+0.8)return '';
+  const u=t-t0; let s='';
+  for(let i=0;i<n;i++){const a=-Math.PI*(0.15+0.7*i/(n-1)); const v=(22+rnd(i+x)*14)*pow;
+    const px=x+Math.cos(a)*v*u, py=y+Math.sin(a)*v*u+60*u*u; s+=`<circle cx="${px}" cy="${py}" r="${2.2*(1-u)+.6}" fill="#fff" opacity="${1-u}"/>`;}
+  s+=`<ellipse cx="${x}" cy="${y+4}" rx="${6+30*u}" ry="${2+6*u}" fill="none" stroke="#fff" stroke-width="1.4" opacity="${1-u/0.8}"/>`;
+  return s;
+}
+function pond(t){
+  let s=`<ellipse cx="128" cy="302" rx="92" ry="36" fill="${W2}"/><ellipse cx="128" cy="300" rx="86" ry="31" fill="${W1}"/>`;
+  for(let k=0;k<5;k++){const x=60+((k*41+t*6)%140), y=280+(k*7)%30; s+=`<path d="M${x} ${y} q4 -2 8 0" stroke="#fff" stroke-width="1" fill="none" opacity=".6"/>`;}
+  // lily pads
+  [[70,306,9],[178,304,8]].forEach(([x,y,r],i)=>{const b=Math.sin(t*1.5+i)*1;
+    s+=`<path d="M${x} ${y+b} m${r} 0 a${r} ${r*0.45} 0 1 1 -${r*0.4} -${r*0.42} L${x} ${y+b} Z" fill="#5DB548"/>`;});
+  s+=`<g transform="translate(176 300)"><circle r="3" fill="#FF8FA8"/><circle r="1.4" fill="#FFCC33"/></g>`;
+  return s;
+}
+function reeds(t,x0){
+  let s=''; const g=gust(t);
+  for(let k=0;k<4;k++){const x=x0+k*4, h=26+k%2*6, a=Math.sin(t*2+k)*5+g*5;
+    s+=`<g transform="rotate(${a} ${x} 282)"><path d="M${x} 282 L${x} ${282-h}" stroke="#3FAE5A" stroke-width="1.8" stroke-linecap="round"/><rect x="${x-1.8}" y="${282-h-1}" width="3.6" height="9" rx="1.8" fill="#8B5A2B"/></g>`;}
+  return s;
+}
+EP.main=function(t){
+  let w=sky(t);
+  w+=hills();
+  w+=pond(t);
+  w+=reeds(t,84)+reeds(t,170);
+  // front-left bank
+  w+=`<path d="M-30 268 Q40 256 84 276 Q98 298 78 340 L-30 340 Z" fill="${C.ground}"/>`;
+  w+=grass(t).replace(/<g transform="rotate\([^"]*\)"><path d="M(1[0-9]{2}|[89]\d) [^>]*><\/g>/g,'');
+
+  // ---------- ducks ----------
+  const D=[];
+  // duck1: under water until 3.2, pops up
+  let d1=null; if(t>=3.2){const u=eBack(prog(t,3.2,3.6)); d1={x:DS[0][0],y:lerp(304,DS[0][1],u)};}
+  // duck2 swims in 8.6-10.0 from right
+  let d2=null; if(t>=8.6){const u=eOut(prog(t,8.6,10.0)); d2={x:lerp(210,DS[1][0],u),y:DS[1][1]};}
+  // duck3 jumps out of reeds 15.0-16.0
+  let d3=null; if(t>=15.0){const u=prog(t,15.0,16.0); d3={x:lerp(90,DS[2][0],u),y:lerp(262,DS[2][1],u)-46*Math.sin(Math.PI*u),rot:u<1?u*360:0,water:u>=1};}
+  // duck4 waddles on far shore 21-22.4 then slips in 22.4-23.0
+  let d4=null; if(t>=21.0){ if(t<22.4){const u=prog(t,21.0,22.4); d4={x:lerp(205,176,u),y:262-Math.abs(Math.sin(u*Math.PI*5))*2,rot:Math.sin(u*Math.PI*10)*10,water:false};}
+    else {const u=prog(t,22.4,23.0); d4={x:lerp(176,DS[3][0],u),y:lerp(262,DS[3][1],eIn(u))-10*Math.sin(Math.PI*u),rot:u<1?-u*200:0,water:u>=1};}}
+  const arr=[d1,d2,d3,d4];
+  // per-duck animation state
+  arr.forEach((d,i)=>{ if(!d)return;
+    const bob=Math.sin(t*3+i*1.7)*1.2;
+    let hop=0, flap=0, quack=0, sc=1, eyes='open';
+    const cnt=29.5+i*1.5; sc=pulse(t,cnt,0.5); if(t>cnt&&t<cnt+0.6){quack=Math.sin(Math.PI*(t-cnt)/0.6);flap=quack;}
+    const arrive=[3.2,10.0,16.0,23.0][i]; if(t>arrive&&t<arrive+0.8){quack=Math.max(quack,Math.abs(Math.sin((t-arrive)*12)));}
+    if(t>35.6&&t<39.8){const ph=(t-35.6)*2.2-i*0.35; hop=Math.max(0,Math.sin(ph*Math.PI))*7; eyes='happy'; flap=Math.max(0,Math.sin(ph*Math.PI*2));}
+    if(t>40){flap=(Math.sin(t*14+i)+1)/2; eyes='happy';}
+    const water=d.water!==false;
+    D.push({i,x:d.x,y:d.y+(water?bob:0)-hop,o:{rot:d.rot||0,flap,quack,s:sc,tuft:DCOL[i],water,eyes}});
+  });
+  // draw back-to-front by y
+  D.sort((a,b)=>a.y-b.y).forEach(d=>{w+=duck(d.x,d.y,d.o);});
+  // bubbles before duck1 pops
+  if(t>2.2&&t<3.2){for(let k=0;k<3;k++){const ph=((t*1.6+k/3)%1); w+=`<circle cx="${DS[0][0]+Math.sin(k*2+t*5)*3}" cy="${300-ph*10}" r="${1+ph*1.2}" fill="none" stroke="#fff" stroke-width=".8" opacity="${1-ph}"/>`;}}
+  // splashes
+  w+=splash(t,0.45,108,292,11,1.3)+splash(t,3.2,DS[0][0],DS[0][1])+splash(t,16.0,DS[2][0],DS[2][1],11)+splash(t,23.0,DS[3][0],DS[3][1],11);
+  // hook water arc hitting Gà Con
+  if(t>0.5&&t<1.15){const u=prog(t,0.5,1.1); for(let k=0;k<6;k++){const uu=clamp(u-k*0.04); const x=lerp(108,60+k*2,uu), y=lerp(290,214+k,uu)-40*Math.sin(Math.PI*uu); w+=`<circle cx="${x}" cy="${y}" r="2.4" fill="#BFE7FA" stroke="#fff" stroke-width=".6"/>`;}}
+  // wake behind duck2
+  if(t>8.6&&t<10.4){const u=prog(t,8.6,10.0); const x=lerp(210,DS[1][0],eOut(u)); w+=`<path d="M${x-12} ${DS[1][1]+2} l18 -4 M${x-12} ${DS[1][1]+6} l18 4" stroke="#fff" stroke-width="1" opacity=".7"/>`;}
+
+  // ---------- Gà Con ----------
+  let jump=0, sy=1+0.015*Math.sin(t*3.2), wl=0, wr=0, eyes='open', rot=0;
+  if(t>1.1&&t<1.5){sy=1-0.18*Math.sin(Math.PI*prog(t,1.1,1.5));}
+  if(t>1.1&&t<3.0)eyes='wow';
+  if(t>1.6&&t<2.3)rot=Math.sin((t-1.6)*40)*8;
+  if((t>3.6&&t<6.3)||(t>10.3&&t<12.8)||(t>16.3&&t<18.8)||(t>23.3&&t<25.8)){jump=Math.max(jump,3*Math.abs(Math.sin(t*Math.PI*1.8)));}
+  const raise=(a,b,both)=>{if(t>a&&t<b){const k=eOut(prog(t,a,a+0.3))*(1-eIn(prog(t,b-0.3,b)));wl=Math.max(wl,110*k);if(both)wr=Math.min(wr,-110*k);}};
+  raise(6.5,8.5,false); raise(13,15,true); raise(19,21,true); raise(26,28,true);
+  if(t>19&&t<21||t>26&&t<28){jump=Math.max(jump,6*Math.abs(Math.sin((t)*Math.PI*1.6)));}
+  if(t>22.6&&t<24)eyes='happy';
+  for(let k=0;k<4;k++){const b=29.5+k*1.5; if(t>b&&t<b+0.4)jump=5*Math.sin(Math.PI*(t-b)/0.4);}
+  if(t>35.6&&t<39.8){const ph=((t-35.6)%0.7)/0.7; jump=10*Math.sin(Math.PI*ph); eyes='happy'; wl=60;wr=-60;}
+  if(t>40){eyes='happy';const k=eOut(prog(t,40,40.4));wr=-k*(100+25*Math.sin((t-40)*2*Math.PI*2));wl=0;}
+  if(eyes==='open'&&(t%3.3)>3.15)eyes='blink';
+  const mouth=window.ENV?mouthAt(t+INTRO):0;
+  w+=`<g transform="translate(${CH.x} ${CH.y}) rotate(${rot+Math.sin(t*1.1)*2} 0 50) scale(${CH.s})">${chick({sy,jump,wl,wr,eyes,mouth})}</g>`;
+  // water drops on Gà Con
+  if(t>1.1&&t<3.0){[[42,215],[64,208],[56,230]].forEach(([x,y],k)=>{const yy=y+(t-1.1)*8; w+=`<path d="M${x} ${yy-4} q-3 4 0 6 q3 -2 0 -6 Z" fill="#BFE7FA" stroke="#fff" stroke-width=".5" opacity="${1-prog(t,2.5,3.0)}"/>`;});}
+  // small numbers above ducks while counting
+  if(t>29.5&&t<35.6){for(let k=0;k<4;k++){const b=29.5+k*1.5; if(t>b){const sc=popScale(t,b); w+=`<g transform="translate(${DS[k][0]} ${DS[k][1]-30}) scale(${sc})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="13" fill="#fff" stroke="${C.ink}" stroke-width="2.5" paint-order="stroke">${k+1}</text></g>`;}}}
+  w+=wind(t);
+
+  let s=`<g transform="${cam(t)}">${w}</g>`;
+  s+=bigNum(1,t,3.2,8.5)+bigNum(2,t,10.0,15.0)+bigNum(3,t,16.0,21.0)+bigNum(4,t,23.0,28.0);
+  for(let k=0;k<4;k++){const b=29.5+k*1.5; s+=bigNum(k+1,t,b,b+1.45);}
+  if(t>35.6&&t<41){const cols=['#F2545B','#45B6F0','#FFCC33','#3FAE5A','#FF8FA8'];
+    for(let i=0;i<50;i++){const st=35.6+rnd(i)*1.2; if(t<st)continue; const u=t-st; const x=rnd(i+9)*180+Math.sin(u*3+i)*6; const y=-10+u*(55+rnd(i+3)*40); if(y>330)continue;
+      s+=`<rect x="${x}" y="${y}" width="3.2" height="5" fill="${cols[i%5]}" transform="rotate(${(u*300+i*40)%360} ${x+1.6} ${y+2.5})"/>`;}}
+  return s;
+};
+
+</script>
+<script src="engine.js"></script></body></html>

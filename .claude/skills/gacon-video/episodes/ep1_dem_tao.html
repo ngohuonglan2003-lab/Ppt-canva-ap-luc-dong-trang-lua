@@ -1,0 +1,127 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#000}
+#stage{position:relative;width:720px;height:1280px;overflow:hidden;font-family:'Baloo 2',sans-serif}
+#svg{position:absolute;inset:0;width:720px;height:1280px}
+#cap{position:absolute;left:50%;top:64px;transform-origin:50% 50%;background:#fff;color:#1D3557;border-radius:44px;padding:18px 40px 10px;font-weight:800;font-size:62px;line-height:1.08;text-align:center;width:max-content;max-width:600px;box-shadow:0 8px 0 rgba(29,53,87,.18)}
+#cap::after{content:"";position:absolute;left:30%;bottom:-26px;border:16px solid transparent;border-top:20px solid #fff}
+#logo{position:absolute;left:0;right:0;top:190px;text-align:center;font-weight:800;font-size:150px;line-height:1;color:#FFCC33;white-space:nowrap}
+#logo span{display:inline-block;transform-origin:50% 90%;text-shadow:0 7px 0 #1D3557,5px 0 0 #1D3557,-5px 0 0 #1D3557,0 -5px 0 #1D3557,4px 4px 0 #1D3557,-4px 4px 0 #1D3557,4px -4px 0 #1D3557,-4px -4px 0 #1D3557}
+#ep{position:absolute;left:50%;top:385px;transform-origin:50% 50%;background:#F2545B;color:#fff;border-radius:40px;padding:14px 38px 6px;font-weight:800;font-size:60px;white-space:nowrap;box-shadow:0 7px 0 #B8323A}
+#flash{position:absolute;inset:0;background:#fff;pointer-events:none}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#9EDCFF;color:#1D3557;text-align:center}
+#end .n{font-size:120px;font-weight:800;line-height:1}
+#end .s{font-size:64px;font-weight:700;color:#fff;text-shadow:0 4px 0 #1D3557,3px 0 0 #1D3557,-3px 0 0 #1D3557,0 -3px 0 #1D3557}
+</style></head>
+<body><div id="stage"><svg id="svg" viewBox="0 0 180 320"></svg><div id="logo"></div><div id="ep"></div><div id="cap"></div><div id="end"><svg id="endsvg" viewBox="-80 -90 160 170" width="360" height="380"></svg><div class="n" id="endName"></div><div class="s" id="endSub"></div></div><div id="flash"></div></div>
+<script>
+const EP={INTRO:4,MAIN:40,END:38.5};
+EP.LANG={
+ vi:{caps:[[1.2,3.0,'Ui da! Cái gì thế?'],[3.2,7.0,'Một quả táo!'],[7.0,9.0,'Một!'],[10.2,14.0,'Hai quả táo!'],[14.0,16.0,'Hai!'],[18.0,22.0,'Ba quả táo!'],[22.2,23.4,'Cùng đếm nào!'],[23.5,25.4,'Một…'],[25.5,27.4,'Hai…'],[27.5,30.0,'Ba!'],[30.3,35.0,'Ba quả táo đỏ! Giỏi\u00A0quá!'],[35.2,38.5,'Bé đếm giỏi lắm! Bye bye!']],
+  name:'Gà Con',sub:'Hẹn gặp lại bé nhé!',ep:'Đếm số 1 · 2 · 3'},
+ en:{caps:[[1.2,3.0,'Oops! What was that?'],[3.2,7.0,'One red apple!'],[7.0,9.0,'One!'],[10.2,14.0,'Two red apples!'],[14.0,16.0,'Two!'],[18.0,22.0,'Three red apples!'],[22.2,23.4,"Let's count!"],[23.5,25.4,'One…'],[25.5,27.4,'Two…'],[27.5,30.0,'Three!'],[30.3,35.0,'Three red apples! Hooray!'],[35.2,38.5,'Great counting! Bye-bye!']],
+  name:'Little Chick',sub:'See you next time!',ep:'Count 1 · 2 · 3'}
+};
+EP.SHOTS=[ // start,end, z0,cx0,cy0, z1,cx1,cy1   (toàn = 1, trung ≈1.4-1.6, cận ≈1.9-2.2)
+ [0,1.0, 1,90,160, 1.05,90,165],
+ [1.0,3.0, 1.45,72,212, 1.55,72,210],
+ [3.0,7.0, 1.45,65,245, 1.6,62,248],
+ [7.0,9.0, 1.3,75,222, 1.35,75,222],
+ [9.0,10.0, 1.1,100,205, 1.15,104,205],
+ [10.0,11.5, 1.65,92,226, 1.75,92,226],
+ [11.5,14.0, 1.35,80,250, 1.45,80,252],
+ [14.0,16.0, 1.3,72,225, 1.35,72,225],
+ [16.0,18.0, 1,90,160, 1.1,112,175],
+ [18.0,22.0, 1.75,125,262, 1.95,130,268],
+ [22.0,30.0, 1.2,90,240, 1.35,90,246],
+ [30.0,35.0, 1.4,70,240, 1.6,70,236],
+ [35.0,99, 1.6,82,214, 1.7,82,214]];
+// episode-specific helpers/scene
+const SLOT=[[45,297],[90,299],[135,297]];
+const CH={x:70,y:236,s:.75};
+EP.main=function(t){
+  let w=sky(t);
+  w+=hills();
+  const g=gust(t);
+  const shake=(a)=> (t>a&&t<a+0.45)? Math.sin((t-a)*60)*1.6 : 0;
+  const sw=Math.sin(t*1.4)*1.8+g*1.2;
+  const sk=shake(0.1)+shake(8.9)+shake(15.9)+sw;
+  w+=`<path d="M141 292 L144 180 L156 180 L160 292 Z" fill="${C.trunk}"/>`;
+  w+=`<g transform="translate(${sk} 0)"><circle cx="150" cy="140" r="46" fill="${C.canopy}"/><circle cx="118" cy="166" r="28" fill="${C.canopy}"/><circle cx="178" cy="172" r="30" fill="${C.canopy}"/><circle cx="135" cy="118" r="22" fill="${C.canopy2}"/><circle cx="170" cy="128" r="18" fill="${C.canopy2}"/>`;
+  w+=apple(160,110,.8,Math.sin(t*2.6)*8)+apple(178,150,.8,Math.sin(t*2.3+1)*8)+apple(140,150,.8,Math.sin(t*2.9+2)*8)+`</g>`;
+  w+=grass(t);
+
+  let a1;
+  if(t<0.5)a1=[100+sk,160,0];
+  else if(t<1.1){const u=eIn(prog(t,0.5,1.1));a1=[lerp(100,74,u),lerp(160,186,u),0];}
+  else if(t<1.9){const u=prog(t,1.1,1.9);a1=[lerp(74,45,u),lerp(186,297,eIn(u))-34*Math.sin(Math.PI*u*0.85),-200*u];}
+  else if(t<2.25){const u=prog(t,1.9,2.25);a1=[45,297-7*Math.sin(Math.PI*u),-200];}
+  else a1=[45,297,0];
+  let a2;
+  if(t<9.3)a2=[128+sk,182,0];
+  else if(t<10.0){const u=eIn(prog(t,9.3,10.0));a2=[lerp(128,116,u),lerp(182,222,u),0];}
+  else if(t<11.0)a2=[116,222+Math.sin((t-10)*12)*1.2,0];
+  else if(t<11.5){const u=eIO(prog(t,11.0,11.5));a2=[lerp(116,90,u),lerp(222,299,u)-20*Math.sin(Math.PI*u),0];}
+  else a2=[90,299,0];
+  let a3;
+  if(t<16.3)a3=[168+sk,190,0];
+  else if(t<16.9){const u=eIn(prog(t,16.3,16.9));a3=[168,lerp(190,297,u),0];}
+  else if(t<17.2){const u=prog(t,16.9,17.2);a3=[168,297-8*Math.sin(Math.PI*u),0];}
+  else if(t<18.0){const u=eOut(prog(t,17.2,18.0));a3=[lerp(168,135,u),297,-u*(33/11)*57.3];}
+  else a3=[135,297,0];
+
+  let jump=0, sy=1+0.015*Math.sin(t*3.2), wl=0, wr=0, eyes='open';
+  if(t>1.1&&t<1.6){sy=1-0.22*Math.sin(Math.PI*prog(t,1.1,1.6));}
+  if(t>1.3&&t<1.9){jump=10*Math.sin(Math.PI*prog(t,1.3,1.9));}
+  if(t>1.1&&t<3.0)eyes='wow';
+  // idle sway + little dance while numbers show
+  if((t>3.4&&t<6.8)||(t>11.8&&t<13.8)||(t>18.3&&t<21.8)){jump=Math.max(jump,3*Math.abs(Math.sin(t*Math.PI*1.8)));}
+  if(t>7&&t<9){wl=110*eOut(prog(t,7,7.3))*(1-eIn(prog(t,8.7,9)));}
+  if(t>9.5&&t<11.1){wr=-55*eOut(prog(t,9.5,9.9))*(1-prog(t,10.9,11.1));}
+  if(t>10&&t<10.5){jump=6*Math.sin(Math.PI*prog(t,10,10.5));}
+  if(t>10&&t<12)eyes='happy';
+  if(t>14&&t<16){const k=eOut(prog(t,14,14.3))*(1-eIn(prog(t,15.7,16)));wl=110*k;wr=-110*k;}
+  if(t>16.9&&t<18.2)eyes='wow';
+  for(const b of [23.5,25.5,27.5]) if(t>b&&t<b+0.4) jump=5*Math.sin(Math.PI*(t-b)/0.4);
+  let hug=0;
+  if(t>30.3){hug=eIO(prog(t,30.3,30.9));}
+  if(t>30.9&&t<34.5){const ph=((t-30.9)%0.7)/0.7; jump=12*Math.sin(Math.PI*ph); eyes='happy';}
+  if(t>30.3&&t<35){wl=lerp(0,-25,hug);wr=lerp(0,25,hug);}
+  if(t>35){eyes='happy';const k=eOut(prog(t,35,35.4));wr=-k*(100+25*Math.sin((t-35)*2*Math.PI*2));wl=0;}
+  if(eyes==='open'){const bt=t%3.3; if(bt>3.15)eyes='blink';}
+  let mouth=0;
+  if(window.ENV){mouth=mouthAt(t+INTRO);}
+  else for(const [a,b] of LANG[lang].caps){ if(t>a&&t<Math.min(b,a+1.4)){mouth=(Math.sin((t-a)*2*Math.PI*5)+1)/2;} }
+
+  const hp=[[50,262],[70,268],[90,262]];
+  function place(a,i){
+    if(hug>0){const to=hp[i];const jy=(t>30.9&&t<34.5)?jump*CH.s:0;
+      return [lerp(a[0],to[0],hug),lerp(a[1],to[1]-jy,hug)-18*Math.sin(Math.PI*hug),a[2]];}
+    return a;
+  }
+  const A=[place(a1,0),place(a2,1),place(a3,2)];
+  const hl=[pulse(t,3.2)*pulse(t,23.5),pulse(t,11.5)*pulse(t,25.5),pulse(t,18.0)*pulse(t,27.5)];
+  const lean=Math.sin(t*1.1)*2;
+  w+=`<g transform="translate(${CH.x} ${CH.y}) rotate(${lean} 0 50) scale(${CH.s})">${chick({sy,jump,wl,wr,eyes,mouth})}</g>`;
+  if(t>1.3&&t<3.0){const sc=popScale(t,1.3)*(t>2.75?clamp((3.0-t)/0.25):1);
+    w+=`<g transform="translate(98 168) scale(${sc}) rotate(${12+Math.sin(t*8)*8})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="30" fill="${C.ink}" stroke="#fff" stroke-width="4" paint-order="stroke">?</text></g>`;}
+  // stars when hit
+  if(t>1.1&&t<2.2){for(let k=0;k<3;k++){const an=(t*5+k*2.1); const x=70+22*Math.cos(an), y=182+7*Math.sin(an);
+    w+=`<path d="M${x} ${y-4} L${x+1.2} ${y-1.2} L${x+4} ${y} L${x+1.2} ${y+1.2} L${x} ${y+4} L${x-1.2} ${y+1.2} L${x-4} ${y} L${x-1.2} ${y-1.2} Z" fill="#FFD84D"/>`;}}
+  A.forEach((a,i)=>{const onGround=a[1]>=296&&hug===0; w+=apple(a[0],a[1],hl[i],a[2],onGround);});
+  if(t>23.5&&t<30.3){[[23.5,'1'],[25.5,'2'],[27.5,'3']].forEach(([b,n],i)=>{if(t>b){const sc=popScale(t,b);w+=`<g transform="translate(${SLOT[i][0]} 313) scale(${sc})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="12" fill="#fff" stroke="${C.ink}" stroke-width="2.5" paint-order="stroke">${n}</text></g>`;}});}
+  w+=wind(t);
+
+  let s=`<g transform="${cam(t)}">${w}</g>`;
+  // screen overlay
+  s+=bigNum(1,t,3.2,9.0)+bigNum(2,t,11.5,16.0)+bigNum(3,t,18.0,22.0)+bigNum(1,t,23.5,25.45)+bigNum(2,t,25.5,27.45)+bigNum(3,t,27.5,30.2);
+  if(t>30.3&&t<36){const cols=['#F2545B','#45B6F0','#FFCC33','#3FAE5A','#FF8FA8'];
+    for(let i=0;i<50;i++){const st=30.3+rnd(i)*1.2; if(t<st)continue; const u=t-st; const x=rnd(i+9)*180+Math.sin(u*3+i)*6; const y=-10+u*(55+rnd(i+3)*40); if(y>330)continue;
+      s+=`<rect x="${x}" y="${y}" width="3.2" height="5" fill="${cols[i%5]}" transform="rotate(${(u*300+i*40)%360} ${x+1.6} ${y+2.5})"/>`;}}
+  return s;
+}
+
+</script>
+<script src="engine.js"></script></body></html>
