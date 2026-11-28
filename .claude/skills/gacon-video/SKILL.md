@@ -50,6 +50,19 @@ Mỗi tập luôn có **2 bản: tiếng Việt và tiếng Anh**. Hai bản dù
 - `scripts/transcribe.py`: nhận diện giọng có mốc từng chữ (faster-whisper).
 - `scripts/thumb.js`: ảnh bìa 1080×1920: `node thumb.js epN.html vi out.png "ĐẾM SỐ" "1 2 3 4" "Cùng Gà Con 🐥"`. Bố cục ảnh bìa: tiêu đề và số ở 1/3 trên, nhân vật ở giữa, nhãn tên ở dưới (vùng an toàn của TikTok/Shorts).
 
+## Hiệu quả kênh (số liệu người dùng báo, cập nhật 28/11/2026)
+- Tập 4 **Chia bánh (bài học cư xử, SEL)** đạt khoảng 1.000 lượt xem. Các tập khác ít lượt xem.
+- **Bản tiếng Anh viral hơn bản tiếng Việt.**
+- Hướng ưu tiên:
+  - Truyện ngắn dạy cư xử và cảm xúc (SEL) cho bé 1–3 tuổi, làm bản **tiếng Anh trước**.
+  - Nhịp chậm, ít kích thích.
+  - Giữ cặp nhân vật Gà Con và bạn Vịt.
+  - Tên tập theo mẫu "Little Chick Learns to …".
+- Ngách đang cân nhắc:
+  - SEL kết hợp nhịp chậm.
+  - Video song ngữ Anh–Việt cho trẻ gốc Việt ở nước ngoài.
+  - Video giúp bé chuyển hoạt động ("hết giờ xem rồi").
+
 ## Bộ màu và chữ (giữ cố định)
 | Thành phần | Màu |
 |---|---|
