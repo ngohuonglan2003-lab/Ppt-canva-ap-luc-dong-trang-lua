@@ -1,6 +1,7 @@
 // Vùng an toàn YouTube Shorts / TikTok (khung 720x1280): trên 0–220px bị thanh trạng thái + nút che,
 // dưới 950–1280px bị tên kênh/tiêu đề che, phải 625–720px bị cột nút Thích/Bình luận che.
 (function(){const st=document.createElement('style');st.textContent=`#cap{top:236px!important;max-width:470px!important;font-size:46px!important;padding:14px 30px 8px!important;border-radius:34px!important}#logo{top:260px!important}#ep{top:450px!important}`;document.head.appendChild(st);})();
+if(typeof EP!=='undefined'&&EP.init)EP.init();  // tập mới: tính mốc thời gian từ LINES trước khi engine đọc EP
 // Gà Con engine: shared drawing, camera, intro, captions, render. Episode file must define EP before loading.
 const INTRO=EP.INTRO||4, MAIN=EP.MAIN, TOTAL=INTRO+MAIN, END=EP.END;
 
@@ -225,7 +226,7 @@ let builtLogo='';
 function renderAt(T,l){
   if(l)lang=l;
   const logo=document.getElementById('logo'), ep=document.getElementById('ep'), cap=document.getElementById('cap'), end=document.getElementById('end'), fl=document.getElementById('flash');
-  if(builtLogo!==lang){logo.innerHTML=[...LANG[lang].name].map(ch=>`<span>${ch===' '?'&nbsp;':ch}</span>`).join('');ep.textContent=LANG[lang].ep;builtLogo=lang;logo.style.fontSize=(LANG[lang].name.length>8?108:150)+'px';logo.style.top=(LANG[lang].name.length>8?285:260)+'px';}
+  if(builtLogo!==lang){logo.innerHTML=[...LANG[lang].name].map(ch=>`<span>${ch===' '?'&nbsp;':ch}</span>`).join('');ep.textContent=LANG[lang].ep;builtLogo=lang;ep.style.fontSize=(LANG[lang].ep.length>22?40:(LANG[lang].ep.length>16?48:60))+'px';logo.style.fontSize=(LANG[lang].name.length>8?108:150)+'px';logo.style.top=(LANG[lang].name.length>8?285:260)+'px';}
   if(T<INTRO){
     document.getElementById('svg').innerHTML=intro(T);
     [...logo.children].forEach((sp,i)=>{const a=0.55+i*0.09; const sc=popScale(T,a,0.4); sp.style.transform=`translateY(${Math.sin(T*4+i*.7)*6}px) scale(${sc}) rotate(${Math.sin(T*3+i)*4}deg)`;});
@@ -284,3 +285,62 @@ function selChick(x,y,s,o,t){const e=o.eyes||'open'; const eyes=(e==='open'&&(t%
 function bigWord(text,t,a,b,y=118,col='#FF8C2B',fs=34){if(t<a||t>b)return '';fs=Math.min(fs,118/(0.62*[...text].length));const sc=popScale(t,a)*(t>b-0.25?clamp((b-t)/0.25):1);
   return `<g transform="translate(90 ${y}) scale(${sc}) rotate(${Math.sin(t*4)*3})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="${fs}" fill="${col}" stroke="#fff" stroke-width="6" paint-order="stroke" stroke-linejoin="round">${text}</text></g>`;}
 function mix(a,b,t){const p=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));const A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
+
+/* ---------- QUY TRÌNH TỰ ĐỘNG (tập 22+): câu thoại → mốc thời gian → cảnh/âm thanh/giọng ---------- */
+// LINES: [[tag, text, speaker?], ...]  speaker: 'chick'(mặc định)|'duck'|'frog'|'mom'|'owl'|'baby'
+// Thời lượng mỗi câu tự tính theo số chữ (đủ chỗ cho giọng đọc vui, không bị đè câu sau).
+function wordCount(text){return text.replace(/ /g,' ').split(/\s+/).filter(Boolean).reduce((n,w)=>n+w.split('-').filter(Boolean).length,0);}
+function buildLines(lines,start=1.2){
+  let t=start; const caps=[],at=[],spk=[],tags=[];
+  for(const [tag,text,who] of lines){const w=wordCount(text); const d=Math.min(5.0,Math.max(2.4,1.2+0.44*w)); caps.push([+t.toFixed(2),+(t+d).toFixed(2),text]); at.push(+t.toFixed(2)); spk.push(who||'chick'); tags.push(tag); t+=d+0.4;}
+  return {caps,at,spk,tags,endAt:+t.toFixed(2)};
+}
+// Khởi tạo EP từ LINES. Gọi: const B=setupEpisode(LINES,{ep:'Bye-Bye, Mommy!', sub:'See you next time!'});
+function setupEpisode(lines,o={}){
+  const B=buildLines(lines);
+  EP.SHIFT=EP.SHIFT??26; EP.INTRO=4; EP.END=+(B.endAt+0.4).toFixed(2); EP.MAIN=+(B.endAt+3.2).toFixed(2);
+  EP.LANG={en:{caps:B.caps,name:'Little Chick',sub:o.sub||'See you next time!',ep:o.ep||''}};
+  EP.LINES=lines; EP.B=B; return B;
+}
+// Góc máy theo câu: [[chỉ số câu bắt đầu, z0,cx0,cy0, z1,cx1,cy1], ...] (câu -1 = giây 0)
+function shotsAt(B,list){const S=[];list.forEach((r,i)=>{const a=r[0]<0?0:B.at[r[0]]-0.2; const b=i+1<list.length?(B.at[list[i+1][0]]-0.2):99; S.push([Math.max(0,a),b,...r.slice(1)]);});return S;}
+// t đang trong câu i?   lineOn(B,t,i)  ;  câu đang nói thuộc nhân vật nào?  speakerAt(B,t)
+function lineOn(B,t,i){return t>=B.caps[i][0]&&t<B.caps[i][1];}
+function speakerAt(B,t){for(let i=0;i<B.caps.length;i++) if(lineOn(B,t,i)) return B.spk[i]; return 'chick';}
+function mouthFor(B,t,who){const m=window.ENV?mouthAt(t+INTRO):0; return speakerAt(B,t)===who?m:0;}
+/* ---------- nhân vật & bối cảnh bổ sung ---------- */
+function momHen(x,y,s,o={}){ // Mẹ Gà: thân kem, mào đỏ, to hơn Gà Con
+  const {wl=0,wr=0,eyes='happy',mouth=0,jump=0}=o;
+  let g=`<g transform="translate(${x} ${y}) scale(${s})">`;
+  g+=`<path d="M-14 -66 q4 -16 10 -2 q4 -16 10 -2 q6 -14 10 2 Z" fill="#E63946" transform="translate(0 ${-jump})"/>`;
+  g+=chick({wl,wr,eyes,mouth,jump,body:'#FFE39A'}).replace(/#FFB81C/g,'#F2C25A');
+  return g+`<path d="M-6 6 q6 10 12 0" fill="#E63946" opacity=".0"/></g>`;
+}
+function owl(x,y,s,o={}){ const {talk=0,blink=false}=o; let g=`<g transform="translate(${x} ${y}) scale(${s})">`;
+  g+=`<ellipse cx="0" cy="22" rx="22" ry="3" fill="#000" opacity=".12"/><ellipse cx="0" cy="2" rx="20" ry="22" fill="#A86A3D"/><ellipse cx="0" cy="8" rx="13" ry="14" fill="#E8C9A0"/>`;
+  g+=`<path d="M-16 -16 l-4 -10 l10 6 Z M16 -16 l4 -10 l-10 6 Z" fill="#8B5A2B"/>`;
+  g+=`<circle cx="-8" cy="-8" r="8" fill="#fff"/><circle cx="8" cy="-8" r="8" fill="#fff"/>`+(blink?`<path d="M-12 -8 h8 M4 -8 h8" stroke="${C.eye}" stroke-width="2"/>`:`<circle cx="-7" cy="-7" r="3.6" fill="${C.eye}"/><circle cx="9" cy="-7" r="3.6" fill="${C.eye}"/>`);
+  g+=`<circle cx="-8" cy="-8" r="9.5" fill="none" stroke="#2E2A3B" stroke-width="1.2"/><circle cx="8" cy="-8" r="9.5" fill="none" stroke="#2E2A3B" stroke-width="1.2"/><path d="M-1.5 -8 h3" stroke="#2E2A3B" stroke-width="1.2"/>`;
+  g+=`<path d="M-3 0 L3 0 L0 ${5+talk*3} Z" fill="${C.beak}"/><path d="M-12 14 q12 10 24 0" stroke="#45B6F0" stroke-width="2" fill="none"/><circle cx="0" cy="22" r="3" fill="#AEB8C4"/>`;
+  return g+'</g>';}
+function bedroom(t,light){ // light 0 tối → 1 sáng đèn ngủ
+  let s=`<rect x="-40" y="-40" width="260" height="440" fill="${mix('#2F3A6B','#5B6AA8',light)}"/><rect x="-40" y="270" width="260" height="170" fill="${mix('#3B3E66','#6B6FA0',light)}"/>`;
+  s+=`<rect x="104" y="96" width="60" height="70" rx="4" fill="#1B2550" stroke="#C9C3E8" stroke-width="4"/><circle cx="148" cy="112" r="7" fill="#FFF3C4"/>`;
+  return s;}
+function bed(x,y){return `<g transform="translate(${x} ${y})"><rect x="-46" y="-14" width="92" height="22" rx="6" fill="#9B6CE0"/><rect x="-46" y="-34" width="12" height="44" rx="4" fill="#7A4FC0"/><rect x="-30" y="-22" width="30" height="12" rx="6" fill="#fff"/><rect x="-8" y="-18" width="52" height="12" rx="5" fill="#FF8FA8"/></g>`;}
+function nightLamp(x,y,on){return `<g transform="translate(${x} ${y})">${on>0?`<circle r="${28*on}" fill="#FFE58A" opacity="${0.25*on}"/>`:''}<path d="M-8 0 L8 0 L5 -14 L-5 -14 Z" fill="${on>0?'#FFD84D':'#AEB8C4'}"/><rect x="-2" y="0" width="4" height="10" fill="#8B5A2B"/><rect x="-7" y="10" width="14" height="3" rx="1" fill="#8B5A2B"/></g>`;}
+function shoe(x,y,rot,c='#F2545B'){return `<g transform="translate(${x} ${y}) rotate(${rot})"><path d="M-9 0 Q-9 -8 -2 -8 L2 -8 Q4 -4 10 -3 Q12 0 10 2 L-9 2 Z" fill="${c}"/><rect x="-9" y="1" width="20" height="3" rx="1.5" fill="#fff"/><path d="M-3 -6 l4 2 M-1 -7 l4 2" stroke="#fff" stroke-width="1"/></g>`;}
+function cupProp(x,y,water=1){return `<g transform="translate(${x} ${y})"><path d="M-6 -12 L6 -12 L5 0 L-5 0 Z" fill="#DDF4FF" stroke="#7CC8F0" stroke-width="1"/>${water>0?`<path d="M-5.6 ${-12+12*(1-water)+1} L5.6 ${-12+12*(1-water)+1} L5 0 L-5 0 Z" fill="#7CC8F0"/>`:''}</g>`;}
+function toyBox(x,y){return `<g transform="translate(${x} ${y})"><rect x="-22" y="-20" width="44" height="22" rx="3" fill="#FF8C2B"/><rect x="-22" y="-20" width="44" height="5" fill="#E07A3A"/><text y="-4" text-anchor="middle" font-family="'Baloo 2'" font-weight="800" font-size="8" fill="#fff">TOYS</text></g>`;}
+function maskFace(kind,x,y,s){ const col={happy:'#FFCC33',sad:'#7CC8F0',angry:'#F2545B',scared:'#9B6CE0'}[kind];
+  let g=`<g transform="translate(${x} ${y}) scale(${s})"><circle r="14" fill="${col}"/>`;
+  if(kind==='happy')g+=`<path d="M-7 -3 q2 -3 4 0 M3 -3 q2 -3 4 0" stroke="${C.eye}" stroke-width="1.6" fill="none"/><path d="M-6 4 q6 7 12 0" stroke="${C.eye}" stroke-width="1.8" fill="none"/>`;
+  if(kind==='sad')g+=`<circle cx="-5" cy="-3" r="1.8" fill="${C.eye}"/><circle cx="5" cy="-3" r="1.8" fill="${C.eye}"/><path d="M-6 7 q6 -5 12 0" stroke="${C.eye}" stroke-width="1.8" fill="none"/><path d="M-6 1 q-1 3 0 4" stroke="#fff" stroke-width="1.6"/>`;
+  if(kind==='angry')g+=`<path d="M-8 -7 l6 3 M8 -7 l-6 3" stroke="${C.eye}" stroke-width="1.8"/><circle cx="-5" cy="-2" r="1.8" fill="${C.eye}"/><circle cx="5" cy="-2" r="1.8" fill="${C.eye}"/><path d="M-6 7 h12" stroke="${C.eye}" stroke-width="1.8"/>`;
+  if(kind==='scared')g+=`<circle cx="-5" cy="-3" r="2.6" fill="#fff"/><circle cx="5" cy="-3" r="2.6" fill="#fff"/><circle cx="-5" cy="-3" r="1.2" fill="${C.eye}"/><circle cx="5" cy="-3" r="1.2" fill="${C.eye}"/><ellipse cx="0" cy="6" rx="3" ry="4" fill="${C.eye}"/>`;
+  return g+'</g>';}
+
+function toyCar(x,y,rot=0,sc=1,c='#45B6F0'){return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})"><rect x="-13" y="-9" width="26" height="9" rx="3" fill="${c}"/><path d="M-7 -9 L-4 -16 L6 -16 L9 -9 Z" fill="${c}"/><rect x="-3" y="-14" width="7" height="4" rx="1" fill="#DDF4FF"/><circle cx="-7" cy="1" r="3.6" fill="#2E2A3B"/><circle cx="7" cy="1" r="3.6" fill="#2E2A3B"/></g>`;}
+function teddy(x,y,s=1){return `<g transform="translate(${x} ${y}) scale(${s})"><circle cx="-7" cy="-13" r="4" fill="#A86A3D"/><circle cx="7" cy="-13" r="4" fill="#A86A3D"/><ellipse cx="0" cy="5" rx="10" ry="8" fill="#A86A3D"/><circle cx="0" cy="-7" r="9" fill="#B97A48"/><ellipse cx="0" cy="-4" rx="4.5" ry="3.4" fill="#E8C9A0"/><circle cx="0" cy="-5" r="1.4" fill="#2E2A3B"/><circle cx="-3.5" cy="-9" r="1.3" fill="#2E2A3B"/><circle cx="3.5" cy="-9" r="1.3" fill="#2E2A3B"/></g>`;}
+function speech(x,y,text,sub,t,t0){if(t<t0)return '';const sc=popScale(t,t0);return `<g transform="translate(${x} ${y}) scale(${sc})"><rect x="-44" y="-20" width="88" height="${sub?38:28}" rx="12" fill="#fff" stroke="#FFCC33" stroke-width="2.5"/><path d="M-8 ${sub?18:8} l6 10 l6 -10 Z" fill="#fff"/><text y="-1" text-anchor="middle" font-family="'Baloo 2'" font-weight="800" font-size="15" fill="#E63946">${text}</text>${sub?`<text y="13" text-anchor="middle" font-family="'Baloo 2'" font-weight="700" font-size="8" fill="#59637F">${sub}</text>`:''}</g>`;}
+function partyNotes(x,y,t){let s='';for(let k=0;k<3;k++){const ph=((t*0.7+k/3)%1); s+=`<text x="${x+Math.sin(t*2+k)*10+k*8}" y="${y-ph*40}" font-size="${10+(k%2)*3}" fill="${['#F2545B','#45B6F0','#9B6CE0'][k]}" opacity="${Math.sin(Math.PI*ph)}">${k%2?'♪':'♫'}</text>`;}return s;}

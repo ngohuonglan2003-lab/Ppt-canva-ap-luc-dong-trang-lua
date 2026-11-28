@@ -5,6 +5,10 @@ description: Làm video YouTube Shorts / TikTok hoạt hình 2D cho bé 1–3 tu
 
 # Kênh Gà Con – quy trình làm video
 
+> **LÀM TẬP MỚI → ĐỌC `references/QUY_TRINH_MAC_DINH.md` VÀ LÀM ĐÚNG THEO ĐÓ.**
+> Khuôn tự động: chỉ viết `LINES` (câu + tag), góc máy và hiệu ứng theo chỉ số câu, cảnh vẽ bằng hàm có sẵn. Chạy `scripts/pipeline.sh build | preview | script | cut | final`. Mốc thời gian, âm thanh, lời thoại và spec tách câu đều tự sinh. Bảng kiểm tra có phủ vùng an toàn.
+> Tập 22–31 (dài 45–52 giây) làm theo khuôn này, dùng làm mẫu.
+
 Phong cách đã chốt: **2D phẳng tươi sáng** (flat vector, không viền, màu tươi).
 Nhân vật chính: **Gà Con** (bản tiếng Anh: **Little Chick**).
 **Từ 28/11/2026: CHỈ LÀM BẢN TIẾNG ANH** (người dùng yêu cầu, vì bản tiếng Anh viral hơn). Không làm bản tiếng Việt, lời thoại chỉ viết tiếng Anh. Các tập 1–11 cũ có 2 bản. Hai bản dùng chung hình và mốc thời gian, chỉ khác giọng đọc và chữ trên màn hình.
@@ -56,6 +60,18 @@ Nhân vật chính: **Gà Con** (bản tiếng Anh: **Little Chick**).
   - Mỗi tập dài 41 giây, 9 câu thoại.
   - Dùng **SEL kit** trong engine: `meadow`, `selChick`, `fxTears`, `fxSteam`, `fxHearts`, `fxBulb`, `fxSparkle`, `fxQ`, `bigWord`, `confetti`, `waveWR`, `ballProp`, `towerProp`, `slideProp`, `iceCream`, `easel`, `mix`.
   - Âm thanh: `python3 audio_sel.py <số tập>` (danh sách sự kiện nằm trong file).
+  22–31. **Khuôn tự động** (`setupEpisode`):
+    - 22 Bye-Bye Mommy
+    - 23 Leave the Park
+    - 24 New Baby Duckie
+    - 25 Scared of the Dark
+    - 26 I Can Do It Myself
+    - 27 Clean Up
+    - 28 Use Your Words
+    - 29 Feelings Faces
+    - 30 Brave at the Doctor
+    - 31 Cảm ơn
+  - Lời thoại nằm ở `references/voice_ep22-31_en.md`.
 - `episodes/epN_*.html`: mỗi tập chỉ khai báo `EP={INTRO,MAIN,END}`, `EP.LANG` (phụ đề vi/en, tên kênh, nhãn tập), `EP.SHOTS` và `EP.main(t)` (cảnh riêng). Tập mới thì **copy ep2 làm mẫu**. Bỏ `engine.js` cạnh file html.
 - `scripts/render.js`: xuất MP4 bằng Playwright và ffmpeg. Tham số: `lang out.mp4 audio.wav [preview]`; biến môi trường `EP_FILE`, `DUR`. Tự nạp `voice/env_<lang>.json` nếu có để nhép miệng.
 - `scripts/keys3.js`: chụp nhanh nhiều khung để kiểm tra (`node keys3.js ep.html vi 2,5.2,13 out`). Thời gian tính cả intro.
