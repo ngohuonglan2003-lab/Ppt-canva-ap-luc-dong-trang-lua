@@ -170,6 +170,17 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
 5. `voice_place.py` cho từng cfg, rồi `mix.sh`, rồi xuất với `ENV_DIR=voice_<tập>`.
    - Điểm cắt tập 3–6 nằm trong `episodes/voice_ep3-6/`.
 
+## Ghép giọng tập 12–21 (bài học)
+- File giọng 245 giây, 487 chữ, 10 tập × 11 câu. Điểm cắt nằm trong `episodes/voice_ep12-21/`.
+- **Câu đọc dài hơn chỗ trống:** `voice_place.py` tự lùi câu sau (cách 0,12 giây) và in ra "lùi …s". Lần này có 9 câu bị lùi, tối đa 0,86 giây, chấp nhận được.
+  - Nếu lùi quá 1,5 giây hoặc có CẢNH BÁO vượt thời lượng, kéo dài khoảng giữa các câu trong `EP.LANG.caps` và `SHOTS` rồi xuất lại.
+- **Lỗi hay gặp khi đọc liền:**
+  - Chữ cuối câu bị tách sang câu sau ("Hey me | first").
+  - Chữ đầu câu bị dính vào câu trước ("three blocks A | big tower").
+  - Đuôi kéo dài lọt sang câu sau ("Duck|ie").
+  - Đều sửa bằng cách in năng lượng 40 ms kèm mốc chữ whisper, rồi chọn chỗ lặng thật.
+- Khi người dùng nói "làm xong thì xuất luôn": ghép giọng, kiểm tra từng câu, rồi **xuất thẳng bản chuẩn** kèm caption, không cần gửi bản xem trước.
+
 ## Giới hạn môi trường đã biết
 - Mạng chặn dịch vụ đọc giọng (speech.platform.bing.com) và HuggingFace, nên không tự tạo giọng được. Người dùng tạo giọng bằng ElevenLabs.
 - Canva: model video mặc định cần gói trả phí. H3 Max thì dùng được.

@@ -10,10 +10,14 @@ raw=subprocess.run(['ffmpeg','-loglevel','error','-i',src,'-ac','1','-ar',str(SR
 a=np.frombuffer(raw,np.float32).copy()
 for lang,cuts in cfg['cuts'].items():
     assert len(cuts)==len(cfg['targets']),f'{lang}: số câu ({len(cuts)}) khác số mốc ({len(cfg["targets"])})'
-    v=np.zeros(N,np.float32)
-    for (s,e),t in zip(cuts,cfg['targets']):
+    v=np.zeros(N,np.float32); prev_end=0.0; GAP=0.12
+    for k,((s,e),t) in enumerate(zip(cuts,cfg['targets'])):
         s=max(0,s-0.04);e=e+0.06;c=a[int(s*SR):int(e*SR)].copy();f=int(0.02*SR)
-        c[:f]*=np.linspace(0,1,f);c[-f:]*=np.linspace(1,0,f);i=int(t*SR);v[i:i+len(c)]+=c[:N-i]
+        c[:f]*=np.linspace(0,1,f);c[-f:]*=np.linspace(1,0,f)
+        t2=max(t,prev_end+GAP)   # câu dài hơn chỗ trống: lùi câu sau, không cho đè giọng
+        if t2>t+0.01: print(f'  {lang} câu {k}: lùi {t2-t:.2f}s (mốc {t} -> {t2:.2f})')
+        i=int(t2*SR); v[i:i+len(c)]+=c[:max(0,N-i)]; prev_end=t2+len(c)/SR
+    if prev_end>cfg['dur']: print(f'  CẢNH BÁO {lang}: câu cuối kết thúc {prev_end:.2f}s > thời lượng {cfg["dur"]}s')
     v=v/max(1e-6,np.abs(v).max())*0.95
     w=wave.open(f'{out}/voice_{lang}.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes((v*32767).astype(np.int16).tobytes());w.close()
     hop=SR//100;env=[float(np.sqrt(np.mean(v[i:i+hop]**2))) for i in range(0,N,hop)];m=max(env)
