@@ -1,8 +1,8 @@
 // Tập 20 · Screen Time Is Over! (video giúp bé chuyển hoạt động) — chỉ tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.2};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.2};
 EP.LANG={en:{caps:[[1.2,3.2,'Ding! Screen time is over!'],[3.4,6.6,'Oh… but I want more!'],[7.0,10.2,"It's okay. Let's say bye-bye to the screen."],[10.6,13.8,'Bye-bye, screen!'],[14.2,17.4,'What should we do now?'],[17.8,21.4,"Let's play outside!"],[21.8,25.4,'Run, jump, play!'],[25.8,29.4,'Playing is so much fun!'],[29.8,33.6,'Turn off the screen and go play! Bye-bye!']],
  name:'Little Chick',sub:'Time to play!',ep:'Screen Time Is Over'}};
-EP.SHOTS=[[0,3.4,1.5,104,236,1.6,104,236],[3.4,7.0,1.8,62,226,1.95,62,224],[7.0,14.2,1.2,90,245,1.25,90,245],[14.2,17.8,1.6,70,232,1.7,70,230],[17.8,99,1.05,92,250,1.15,92,250]];
+EP.SHOTS=[[0,3.4,1.35,96,232,1.45,96,232],[3.4,7.0,1.6,70,228,1.7,70,226],[7.0,14.2,1.2,90,245,1.25,90,245],[14.2,17.8,1.6,70,232,1.7,70,230],[17.8,99,1.05,92,250,1.15,92,250]];
 function room(t){
   let s=`<rect x="-40" y="-40" width="260" height="400" fill="#FFF1DC"/><rect x="-40" y="268" width="260" height="80" fill="#E8C9A0"/><rect x="-40" y="266" width="260" height="4" fill="#D6B184"/>`;
   s+=`<rect x="20" y="110" width="56" height="60" rx="4" fill="#9EDCFF" stroke="#fff" stroke-width="5"/><circle cx="62" cy="128" r="7" fill="#FFD84D"/><path d="M20 158 Q48 146 76 158 L76 170 L20 170 Z" fill="#7CCB5E"/><path d="M48 110 L48 170 M20 140 L76 140" stroke="#fff" stroke-width="3"/>`;
@@ -18,8 +18,8 @@ EP.main=function(t){
   const outside=t>=17.8;
   let w='';
   if(!outside){
-    w+=room(t); const on=t<10.6?1:clamp(1-(t-10.6)/0.6); w+=tablet(110,236,on,t)+timer(150,190,t,t<3.2);
-    if(t<3.2&&t>0.2)w+=`<text x="150" y="172" text-anchor="middle" font-family="'Baloo 2'" font-weight="800" font-size="11" fill="#F2545B">DING!</text>`;
+    w+=room(t); const on=t<10.6?1:clamp(1-(t-10.6)/0.6); w+=tablet(112,236,on,t)+timer(128,186,t,t<3.2);
+    if(t<3.2&&t>0.2)w+=`<text x="128" y="168" text-anchor="middle" font-family="'Baloo 2'" font-weight="800" font-size="11" fill="#F2545B">DING!</text>`;
     let ge='open', gwl=0, gwr=0, gj=0;
     if(t<0.3)ge='happy'; if(t>0.3&&t<1.2)ge='wow';
     if(t>3.4&&t<7)ge='sad';
@@ -30,7 +30,7 @@ EP.main=function(t){
     if(t>14.2)w+=fxQ(62,188,t,14.4);
     if(t>10.6&&t<11.6)w+=fxSparkle(110,236,t,10.6,30);
     // đèn tablet hắt lên mặt khi đang xem
-    if(t<10.6)w+=`<ellipse cx="80" cy="238" rx="30" ry="34" fill="#7CD3FF" opacity=".12"/>`;
+
   } else {
     w+=meadow(t);
     const run=(ph)=>(t>21.8&&t<29.8)?Math.abs(Math.sin((t-21.8)*Math.PI*1.6+ph))*10:0;

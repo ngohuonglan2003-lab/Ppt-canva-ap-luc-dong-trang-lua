@@ -1,5 +1,5 @@
 // Tập 12 · Little Chick Learns to Share: The Ball (phần 2 của tập Chia bánh) — chỉ tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.2};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.2};
 EP.LANG={en:{caps:[[1.2,3.2,'My ball! No, my ball!'],[3.4,6.6,'Uh-oh! We both want to play.'],[7.0,10.2,"I know! Let's take turns!"],[10.6,14.0,'Your turn, Duckie!'],[14.4,17.6,'Now my turn!'],[18.0,21.4,'Your turn! My turn!'],[21.8,25.4,'Playing together is more fun!'],[25.8,29.6,'Taking turns makes friends happy!'],[30.0,33.6,"Let's share and take turns! Bye-bye!"]],
  name:'Little Chick',sub:'See you next time!',ep:'Share the Ball'}};
 EP.SHOTS=[[0,3.4,1.5,94,245,1.6,94,245],[3.4,7.0,1.1,92,250,1.15,92,250],[7.0,10.6,1.6,60,228,1.75,60,226],[10.6,21.8,1.05,92,252,1.1,92,252],[21.8,30.0,1.1,92,250,1.25,92,250],[30.0,99,1.2,92,250,1.3,92,250]];

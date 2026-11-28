@@ -1,5 +1,5 @@
 // Tập 16 · Magic Words: Please & Thank You — chỉ tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.0};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.0};
 EP.LANG={en:{caps:[[1.2,3.2,'Give me that!'],[3.4,6.6,'Oops! The toy ran away!'],[7.0,10.2,'Hmm… what are the magic words?'],[10.6,13.8,'Please! May I play?'],[14.2,17.4,'Yes, you may!'],[17.8,21.0,'Thank you, Duckie!'],[21.4,24.6,"You're welcome!"],[25.0,29.0,'Please and thank you! Magic words!'],[29.4,33.4,'Use your magic words! Bye-bye!']],
  name:'Little Chick',sub:'See you next time!',ep:'Magic Words'}};
 EP.SHOTS=[[0,3.4,1.4,100,250,1.5,100,250],[3.4,7.0,1.05,92,245,1.1,92,245],[7.0,10.6,1.7,58,228,1.85,58,226],[10.6,25.0,1.2,96,250,1.3,96,250],[25.0,29.4,1.0,90,200,1.05,90,205],[29.4,99,1.2,94,250,1.3,94,250]];

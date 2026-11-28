@@ -1,5 +1,5 @@
 // Tập 19 · Be Kind to a New Friend — chỉ tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.2};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.2};
 EP.LANG={en:{caps:[[1.2,3.2,'Who is that?'],[3.4,6.6,'Froggy is all alone.'],[7.0,10.2,'Little Chick has an idea.'],[10.6,13.8,'Hi, Froggy! Do you want to play?'],[14.2,17.4,'Yes, please!'],[17.8,21.4,"Let's play together!"],[21.8,25.4,'Hop, hop, hop!'],[25.8,29.4,'Now we have a new friend!'],[29.8,33.6,'Be kind to everyone! Bye-bye!']],
  name:'Little Chick',sub:'See you next time!',ep:'Be Kind'}};
 EP.SHOTS=[[0,3.4,1.3,70,245,1.4,72,245],[3.4,7.0,1.8,150,268,1.95,150,268],[7.0,10.6,1.7,56,228,1.85,56,226],[10.6,14.2,1.25,100,252,1.35,104,252],[14.2,17.8,1.8,146,268,1.95,146,268],[17.8,99,1.05,92,250,1.15,92,250]];

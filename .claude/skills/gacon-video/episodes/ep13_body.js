@@ -1,5 +1,5 @@
 // Tập 13 · Little Chick Learns to Take Turns (cầu trượt) — chỉ tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.0};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.0};
 EP.LANG={en:{caps:[[1.2,3.2,'Hey! Me first!'],[3.4,6.6,'Oh no! Little Chick is sad.'],[7.0,10.2,"Wait, Duckie! Let's take turns."],[10.6,13.8,'Little Chick goes first. Wheee!'],[14.2,17.4,"Now it's Duckie's turn. Wheee!"],[17.8,21.0,'Froggy waits too. Wheee!'],[21.4,25.0,'Waiting is hard, but we can do it!'],[25.4,29.0,'Everyone gets a turn! Hooray!'],[29.4,33.4,"Let's take turns! Bye-bye!"]],
  name:'Little Chick',sub:'See you next time!',ep:'Taking Turns'}};
 EP.SHOTS=[[0,3.4,1.3,80,240,1.4,80,240],[3.4,7.0,1.6,46,236,1.7,46,236],[7.0,10.6,1.2,80,245,1.25,80,245],[10.6,21.4,1.1,110,225,1.15,112,228],[21.4,29.4,1.15,80,248,1.25,80,248],[29.4,99,1.2,90,250,1.3,90,250]];

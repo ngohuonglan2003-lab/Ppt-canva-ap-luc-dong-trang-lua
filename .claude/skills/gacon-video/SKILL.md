@@ -124,6 +124,25 @@ Mỗi dòng là `[bắt đầu, kết thúc, zoom0, cx0, cy0, zoom1, cx1, cy1]`,
 - **Bài hát theo nhịp:** `BEAT=60/110`. Pha phách = `((t+INTRO)/BEAT)%1` vì nhạc bắt đầu ở giây 0 của video. Động tác và tiếng hiệu ứng đặt đúng các phách.
 - **Vật cùng màu với Gà Con** (bóng vàng, vịt vàng) cần viền trắng hoặc đổi tông, và phải vẽ sau Gà Con nếu nằm trước người.
 
+## VÙNG AN TOÀN SHORTS/TIKTOK (bắt buộc, rút ra từ ảnh chụp người dùng đăng thật)
+Khung 720×1280 (ảnh xuất 1080×1920) có các vùng bị giao diện che:
+- **Trên 0–220px:** thanh trạng thái, nút Quay lại, Tìm kiếm. Phụ đề cũ ở 64px bị che.
+- **Dưới 950–1280px:** tên kênh, tiêu đề, nút "Chia sẻ video".
+- **Phải 625–720px:** cột nút Thích, Bình luận, Lưu, Chia sẻ.
+
+Engine đã tự xử lý:
+- Phụ đề đặt ở top 236px, rộng tối đa 470px, cỡ chữ 46px.
+- Logo intro đặt ở 260px, nhãn tập ở 450px.
+- `bigWord` tự co cỡ chữ cho rộng không quá khoảng 120 đơn vị.
+- `EP.SHIFT=26`: **mọi tập mới phải đặt** để nâng cả cảnh lên khỏi dải dưới. Đồi đã kéo dài xuống 440 nên không lộ khoảng trống.
+
+Khi dựng cảnh:
+- Đạo cụ và chữ quan trọng (đồng hồ, chữ DING, số) đặt trong x ≈ 20–150 (đơn vị thế giới ở zoom 1). **Không đặt sát mép phải.**
+- Mặt nhân vật không nằm ở dải dưới.
+- Cảnh cận không cắt mất nửa nhân vật ở mép trái.
+
+**Kiểm tra bắt buộc trước khi xuất:** `SAFE=1 node keys3.js ep.html en 3,7,12,... out`. Lệnh này phủ màu đỏ lên các vùng bị che. Chữ, mặt nhân vật hay đạo cụ chính nằm trong vùng đỏ thì phải sửa.
+
 ## Phụ đề và chữ
 - Bong bóng phụ đề rộng tối đa 600px. Dùng ` ` để giữ cụm không bị xuống dòng (`Bye bye!`, `Giỏi quá!`).
 - Logo intro: tên dài hơn 8 ký tự (Little Chick) tự giảm cỡ chữ (đã có trong engine).

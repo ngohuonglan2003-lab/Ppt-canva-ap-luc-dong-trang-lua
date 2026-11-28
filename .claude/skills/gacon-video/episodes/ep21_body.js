@@ -1,5 +1,5 @@
 // Tập 21 · Say it in Vietnamese! Xin chào (song ngữ cho trẻ gốc Việt) — kênh tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.2};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.2};
 EP.LANG={en:{caps:[[1.2,3.2,"Let's learn Vietnamese!"],[3.4,6.6,'How do we say hello?'],[7.0,10.2,'Xin chào!'],[10.6,13.8,'Say it with me! Xin chào!'],[14.2,17.4,'Hello, Duckie! Xin chào!'],[17.8,21.4,'Xin chào, Little Chick!'],[21.8,25.4,'Wave and say… Xin chào!'],[25.8,29.4,'Great job! You speak Vietnamese!'],[29.8,33.6,'Tạm biệt! That means bye-bye!']],
  name:'Little Chick',sub:'Tạm biệt! See you next time!',ep:'Say it in Vietnamese!'}};
 EP.SHOTS=[[0,7.0,1.5,80,232,1.6,80,230],[7.0,14.2,1.25,84,240,1.35,84,238],[14.2,21.8,1.15,96,250,1.2,96,250],[21.8,25.8,1.3,78,236,1.4,78,234],[25.8,99,1.1,92,250,1.2,92,250]];

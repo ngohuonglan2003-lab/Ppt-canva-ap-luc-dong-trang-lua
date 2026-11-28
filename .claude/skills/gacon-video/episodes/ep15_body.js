@@ -1,5 +1,5 @@
 // Tập 15 · Little Chick Learns to Say Sorry — chỉ tiếng Anh
-const EP={INTRO:4,MAIN:37,END:34.2};
+const EP={SHIFT:26,INTRO:4,MAIN:37,END:34.2};
 EP.LANG={en:{caps:[[1.2,3.2,'Splash! Oh no!'],[3.4,6.6,"Froggy's picture is wet."],[7.0,10.2,'Little Chick feels bad.'],[10.6,13.8,"I'm sorry, Froggy!"],[14.2,17.4,'Let me help you.'],[17.8,21.4,"Let's draw a new picture together!"],[21.8,25.4,'Wow! It is so pretty!'],[25.8,29.4,'Thank you, Little Chick!'],[29.8,33.6,'Saying sorry makes it better! Bye-bye!']],
  name:'Little Chick',sub:'See you next time!',ep:'Saying Sorry'}};
 EP.SHOTS=[[0,3.4,1.5,100,250,1.6,100,250],[3.4,7.0,1.7,132,262,1.85,132,262],[7.0,10.6,1.7,56,230,1.85,56,228],[10.6,17.8,1.15,94,250,1.2,94,250],[17.8,25.8,1.5,104,250,1.65,104,248],[25.8,29.8,1.6,134,265,1.75,134,265],[29.8,99,1.15,94,250,1.25,94,250]];

@@ -1,3 +1,6 @@
+// Vùng an toàn YouTube Shorts / TikTok (khung 720x1280): trên 0–220px bị thanh trạng thái + nút che,
+// dưới 950–1280px bị tên kênh/tiêu đề che, phải 625–720px bị cột nút Thích/Bình luận che.
+(function(){const st=document.createElement('style');st.textContent=`#cap{top:236px!important;max-width:470px!important;font-size:46px!important;padding:14px 30px 8px!important;border-radius:34px!important}#logo{top:260px!important}#ep{top:450px!important}`;document.head.appendChild(st);})();
 // Gà Con engine: shared drawing, camera, intro, captions, render. Episode file must define EP before loading.
 const INTRO=EP.INTRO||4, MAIN=EP.MAIN, TOTAL=INTRO+MAIN, END=EP.END;
 
@@ -119,7 +122,7 @@ function sky(t,sunY=56){
   s+=birds(t);
   return s;
 }
-function hills(){return `<path d="M-40 262 Q60 238 120 258 T220 250 L220 340 L-40 340 Z" fill="${C.ground2}"/><path d="M-40 276 Q90 254 220 276 L220 340 L-40 340 Z" fill="${C.ground}"/>`;}
+function hills(){return `<path d="M-40 262 Q60 238 120 258 T220 250 L220 440 L-40 440 Z" fill="${C.ground2}"/><path d="M-40 276 Q90 254 220 276 L220 440 L-40 440 Z" fill="${C.ground}"/>`;}
 
 function mouthAt(T){const E=window.ENV;if(!E)return 0;const i=Math.round(T*100);let e=0;for(let k=i-2;k<=i+2;k++)if(E[k]>e)e=E[k];return clamp((e-0.08)/0.55);}
 
@@ -184,7 +187,7 @@ function cam(t){
   const u=eIO(prog(t,sh[0],Math.min(sh[1],MAIN)));
   const z=lerp(sh[2],sh[5],u); let cx=lerp(sh[3],sh[6],u), cy=lerp(sh[4],sh[7],u);
   cx=clamp(cx,90/z,180-90/z); cy=clamp(cy,160/z,320-160/z);
-  return `translate(90 160) scale(${z}) translate(${-cx} ${-cy})`;
+  return `translate(0 ${-(EP.SHIFT||0)}) translate(90 160) scale(${z}) translate(${-cx} ${-cy})`;
 }
 
 function bigNum(n,t,a,b){
@@ -222,7 +225,7 @@ let builtLogo='';
 function renderAt(T,l){
   if(l)lang=l;
   const logo=document.getElementById('logo'), ep=document.getElementById('ep'), cap=document.getElementById('cap'), end=document.getElementById('end'), fl=document.getElementById('flash');
-  if(builtLogo!==lang){logo.innerHTML=[...LANG[lang].name].map(ch=>`<span>${ch===' '?'&nbsp;':ch}</span>`).join('');ep.textContent=LANG[lang].ep;builtLogo=lang;logo.style.fontSize=(LANG[lang].name.length>8?108:150)+'px';logo.style.top=(LANG[lang].name.length>8?215:190)+'px';}
+  if(builtLogo!==lang){logo.innerHTML=[...LANG[lang].name].map(ch=>`<span>${ch===' '?'&nbsp;':ch}</span>`).join('');ep.textContent=LANG[lang].ep;builtLogo=lang;logo.style.fontSize=(LANG[lang].name.length>8?108:150)+'px';logo.style.top=(LANG[lang].name.length>8?285:260)+'px';}
   if(T<INTRO){
     document.getElementById('svg').innerHTML=intro(T);
     [...logo.children].forEach((sp,i)=>{const a=0.55+i*0.09; const sc=popScale(T,a,0.4); sp.style.transform=`translateY(${Math.sin(T*4+i*.7)*6}px) scale(${sc}) rotate(${Math.sin(T*3+i)*4}deg)`;});
@@ -278,6 +281,6 @@ function easel(x,y,wet,draw){ // wet 0..1 vết nước, draw 0..1 tranh mới
 function waveWR(t,t0){const k=eOut(prog(t,t0,t0+0.4)); return -k*(100+25*Math.sin((t-t0)*2*Math.PI*2));}
 function meadow(t){return sky(t)+hills()+grass(t);}
 function selChick(x,y,s,o,t){const e=o.eyes||'open'; const eyes=(e==='open'&&(t%3.3)>3.15)?'blink':e; return `<g transform="translate(${x} ${y}) rotate(${(o.rot||0)+Math.sin(t*1.1)*2} 0 50) scale(${s})">${chick({...o,eyes})}</g>`;}
-function bigWord(text,t,a,b,y=118,col='#FF8C2B',fs=34){if(t<a||t>b)return '';const sc=popScale(t,a)*(t>b-0.25?clamp((b-t)/0.25):1);
+function bigWord(text,t,a,b,y=118,col='#FF8C2B',fs=34){if(t<a||t>b)return '';fs=Math.min(fs,118/(0.62*[...text].length));const sc=popScale(t,a)*(t>b-0.25?clamp((b-t)/0.25):1);
   return `<g transform="translate(90 ${y}) scale(${sc}) rotate(${Math.sin(t*4)*3})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="${fs}" fill="${col}" stroke="#fff" stroke-width="6" paint-order="stroke" stroke-linejoin="round">${text}</text></g>`;}
 function mix(a,b,t){const p=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));const A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
