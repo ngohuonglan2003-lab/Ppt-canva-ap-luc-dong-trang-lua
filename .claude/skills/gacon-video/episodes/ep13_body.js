@@ -1,0 +1,36 @@
+// Tập 13 · Little Chick Learns to Take Turns (cầu trượt) — chỉ tiếng Anh
+const EP={INTRO:4,MAIN:37,END:34.0};
+EP.LANG={en:{caps:[[1.2,3.2,'Hey! Me first!'],[3.4,6.6,'Oh no! Little Chick is sad.'],[7.0,10.2,"Wait, Duckie! Let's take turns."],[10.6,13.8,'Little Chick goes first. Wheee!'],[14.2,17.4,"Now it's Duckie's turn. Wheee!"],[17.8,21.0,'Froggy waits too. Wheee!'],[21.4,25.0,'Waiting is hard, but we can do it!'],[25.4,29.0,'Everyone gets a turn! Hooray!'],[29.4,33.4,"Let's take turns! Bye-bye!"]],
+ name:'Little Chick',sub:'See you next time!',ep:'Taking Turns'}};
+EP.SHOTS=[[0,3.4,1.3,80,240,1.4,80,240],[3.4,7.0,1.6,46,236,1.7,46,236],[7.0,10.6,1.2,80,245,1.25,80,245],[10.6,21.4,1.1,110,225,1.15,112,228],[21.4,29.4,1.15,80,248,1.25,80,248],[29.4,99,1.2,90,250,1.3,90,250]];
+const SL={x:78,y:290};
+// vị trí trên cầu trượt theo u (0 đỉnh → 1 chân)
+function slidePos(u){const K=1.35; const p=[[SL.x+8*K,SL.y-80*K],[SL.x+30*K,SL.y-62*K],[SL.x+46*K,SL.y-24*K],[SL.x+70*K,SL.y-8*K]]; const i=Math.min(2,Math.floor(u*3)); const v=u*3-i; return [lerp(p[i][0],p[i+1][0],v),lerp(p[i][1],p[i+1][1],v)];}
+EP.main=function(t){
+  let w=meadow(t)+`<g transform="translate(${SL.x} ${SL.y}) scale(1.35) translate(${-SL.x} ${-SL.y})">${slideProp(SL.x,SL.y)}</g>`;
+  const mv=window.ENV?mouthAt(t+INTRO):0;
+  // hàng chờ: Gà Con 40, Vịt chen lên trước lúc đầu
+  let cx=34, cy=240, cs=.5, crot=0, ce='open', cwl=0, cwr=0, cj=0;
+  let dx=t<0.9?lerp(-20,70,prog(t,0,0.9)):70, dy=268, drot=0, de='open';
+  let fx=18, fy=290;
+  if(t<1.2){ce='wow';}
+  if(t>1.2&&t<7){ce='sad';}
+  if(t>7&&t<10.6){dx=lerp(70,20,eIO(prog(t,7,8))); ce='happy'; cwr=-60;}
+  if(t>=7)fx=-10;
+  // lượt Gà Con 10.6–14.2
+  const ride=(a)=>{const climb=prog(t,a,a+1.2), down=prog(t,a+1.3,a+2.6); if(t<a+1.25)return [lerp(SL.x-8,SL.x+10,climb),lerp(272,SL.y-112,climb),0,'climb']; if(t<a+2.6){const [x,y]=slidePos(eIn(down)); return [x,y-6,-20,'down'];} return [SL.x+100,SL.y-6,0,'end'];};
+  if(t>=10.6){const [x,y,r,ph]=ride(10.6); if(t<14.2){cx=x;cy=y-26;cs=.42;crot=r; if(ph==='down'){ce='happy';cwl=110;cwr=-110;}} else {cx=160;cy=262;cs=.42;ce='happy';}}
+  if(t>=7&&t<14.2){/* Vịt chờ ở cuối hàng */ dx=20;}
+  if(t>=14.2){const [x,y,r,ph]=ride(14.2); if(t<17.8){dx=x;dy=y;drot=r;de=ph==='down'?'happy':'open';} else {dx=162;dy=272;de='happy';}}
+  if(t>=17.8){const [x,y,r]=ride(17.8); if(t<21.4){fx=x;fy=y+4;} else {fx=140; fy=296;}}
+  else if(t>=7) fx=lerp(-10,22,prog(t,7,8));
+  if(t>21.4){cj=6*Math.abs(Math.sin(t*Math.PI*1.4)); ce='happy';}
+  if(t>29.4){cwr=waveWR(t,29.4);}
+  w+=duckStand(dx,dy,{s:1.3,flap:(t>14.2&&t<17.8)?1:(t>25.4?Math.abs(Math.sin(t*9)):0),eyes:de});
+  w+=frog(fx,fy,{puff:0,blink:(t%3)>2.85,jumpK:0});
+  w+=selChick(cx,cy,cs,{rot:crot,jump:cj,wl:cwl,wr:cwr,eyes:ce,mouth:mv},t);
+  if(t>1.2&&t<7)w+=fxTears(cx,cy-8,t);
+  if(t>25.4&&t<29.4)w+=fxHearts(90,220,t,25.4);
+  w+=wind(t);
+  return `<g transform="${cam(t)}">${w}</g>`+bigWord('WHEEE!',t,11.9,13.6,110,'#F2545B')+bigWord('WHEEE!',t,15.5,17.2,110,'#45B6F0')+bigWord('WHEEE!',t,19.1,20.8,110,'#3FAE5A')+confetti(t,25.4,4);
+};

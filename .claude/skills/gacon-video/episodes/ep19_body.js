@@ -1,0 +1,34 @@
+// Tập 19 · Be Kind to a New Friend — chỉ tiếng Anh
+const EP={INTRO:4,MAIN:37,END:34.2};
+EP.LANG={en:{caps:[[1.2,3.2,'Who is that?'],[3.4,6.6,'Froggy is all alone.'],[7.0,10.2,'Little Chick has an idea.'],[10.6,13.8,'Hi, Froggy! Do you want to play?'],[14.2,17.4,'Yes, please!'],[17.8,21.4,"Let's play together!"],[21.8,25.4,'Hop, hop, hop!'],[25.8,29.4,'Now we have a new friend!'],[29.8,33.6,'Be kind to everyone! Bye-bye!']],
+ name:'Little Chick',sub:'See you next time!',ep:'Be Kind'}};
+EP.SHOTS=[[0,3.4,1.3,70,245,1.4,72,245],[3.4,7.0,1.8,150,268,1.95,150,268],[7.0,10.6,1.7,56,228,1.85,56,226],[10.6,14.2,1.25,100,252,1.35,104,252],[14.2,17.8,1.8,146,268,1.95,146,268],[17.8,99,1.05,92,250,1.15,92,250]];
+const FSP=[[14.2,17.4]];
+EP.main=function(t){
+  let w=meadow(t);
+  const mv=window.ENV?mouthAt(t+INTRO):0, fSp=FSP.some(([a,b])=>t>a&&t<b);
+  // cây nhỏ ở góc phải, Ếch ngồi dưới
+  w+=`<path d="M158 290 L160 240" stroke="#A86A3D" stroke-width="5"/><circle cx="160" cy="228" r="20" fill="#3FAE5A"/><circle cx="150" cy="236" r="12" fill="#5CC46F"/>`;
+  let gx=56, dx=96, fx=150, fy=292;
+  if(t>10.6){const u=eIO(prog(t,10.6,11.6)); gx=lerp(56,112,u); dx=lerp(96,74,u);}
+  if(t>17.8){const u=eIO(prog(t,17.8,18.8)); gx=lerp(112,90,u); dx=lerp(74,44,u); fx=lerp(150,140,u);}
+  const hop=(ph)=>(t>21.8&&t<25.8)?10*Math.abs(Math.sin((t-21.8)*Math.PI*1.5+ph)):0;
+  let ge='open', gwl=0, gwr=0, de='open', dflap=0;
+  if(t<1.2){ge='open';} if(t>1.2&&t<7){ge='open';}
+  if(t>7&&t<10.6){ge='happy'; gwl=110*eOut(prog(t,7,7.3));}
+  if(t>10.6&&t<14.2){ge='happy'; gwr=-(80+20*Math.sin(t*10));}
+  if(t>14.2)ge='happy';
+  if(t>17.8){de='happy'; dflap=Math.abs(Math.sin(t*6))*0.6;}
+  if(t>21.8&&t<25.8){gwl=100;gwr=-100;dflap=1;}
+  if(t>29.8){gwr=waveWR(t,29.8); dflap=(Math.sin(t*12)+1)/2;}
+  const lonely=t<14.2;
+  w+=frog(fx,fy-hop(2),{puff:fSp?mv:0,blink:lonely?((t%1.6)>0.8):((t%3)>2.85),jumpK:hop(2)>2?1:0});
+  if(lonely&&t>3.4)w+=`<path d="M${fx-6} ${fy-18} q6 -4 12 0" stroke="${C.eye}" stroke-width="1" fill="none" opacity=".0"/>`;
+  w+=duckStand(dx,262-hop(1),{s:1.4,flap:dflap,eyes:de});
+  w+=selChick(gx,238-hop(0)*0,.5,{jump:hop(0),wl:gwl,wr:gwr,eyes:ge,mouth:fSp?0:mv},t);
+  if(t>1.2&&t<3.4)w+=fxQ(56,190,t,1.3);
+  if(t>7&&t<10.6)w+=fxBulb(56,190,t,7.05);
+  if(t>25.8)w+=fxHearts(100,220,t,25.8);
+  w+=wind(t);
+  return `<g transform="${cam(t)}">${w}</g>`+bigWord('HOP! HOP! HOP!',t,21.8,25.2,112,'#3FAE5A',21)+confetti(t,25.8,4);
+};

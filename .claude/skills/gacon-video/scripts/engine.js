@@ -38,7 +38,7 @@ function chick(o){
   s+=`<ellipse cx="-24" cy="-32" rx="16" ry="9" transform="rotate(-30 -24 -32)" fill="#fff" opacity=".35"/>`;
   if(eyes==='happy') s+=`<path d="M-31 -9 q9 -11 18 0 M13 -9 q9 -11 18 0" fill="none" stroke="${C.eye}" stroke-width="4.5" stroke-linecap="round"/>`;
   else if(eyes==='sleep') s+=`<path d="M-31 -12 q9 8 18 0 M13 -12 q9 8 18 0" fill="none" stroke="${C.eye}" stroke-width="4" stroke-linecap="round"/>`;
-  else if(eyes==='sad'){ s+=`<circle cx="-22" cy="-10" r="8" fill="${C.eye}"/><circle cx="22" cy="-10" r="8" fill="${C.eye}"/><circle cx="-19" cy="-13" r="2.6" fill="#fff"/><circle cx="25" cy="-13" r="2.6" fill="#fff"/><path d="M-32 -26 L-14 -22 M32 -26 L14 -22" stroke="${C.eye}" stroke-width="3.5" stroke-linecap="round"/>`; }
+  else if(eyes==='sad'){ s+=`<circle cx="-22" cy="-10" r="8" fill="${C.eye}"/><circle cx="22" cy="-10" r="8" fill="${C.eye}"/><circle cx="-19" cy="-13" r="2.6" fill="#fff"/><circle cx="25" cy="-13" r="2.6" fill="#fff"/><path d="M-32 -21 L-14 -27 M32 -21 L14 -27" stroke="${C.eye}" stroke-width="3.5" stroke-linecap="round"/><path d="M-6 22 q6 -4 12 0" stroke="${C.eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`; }
   else if(eyes==='blink') s+=`<path d="M-30 -12 h16 M14 -12 h16" stroke="${C.eye}" stroke-width="4" stroke-linecap="round"/>`;
   else{const r=eyes==='wow'?11:8.5;
     s+=`<circle cx="-22" cy="-12" r="${r}" fill="${C.eye}"/><circle cx="22" cy="-12" r="${r}" fill="${C.eye}"/>`;
@@ -245,3 +245,39 @@ function renderAt(T,l){
     document.getElementById('endsvg').innerHTML=chick({eyes:'happy',wr:w,jump:Math.abs(Math.sin(t*5))*4,mouth:mouthAt(T)});}
 }
 window.renderAt=renderAt;
+
+/* ---------- SEL kit: hiệu ứng cảm xúc, đạo cụ, nhân vật đặt sẵn (tập 12+) ---------- */
+function confetti(t,t0,dur=5){ if(t<t0||t>t0+dur)return ''; let s=''; const cols=['#F2545B','#45B6F0','#FFCC33','#3FAE5A','#FF8FA8'];
+  for(let i=0;i<50;i++){const st=t0+rnd(i)*1.2; if(t<st)continue; const u=t-st; const x=rnd(i+9)*180+Math.sin(u*3+i)*6; const y=-10+u*(55+rnd(i+3)*40); if(y>330)continue;
+    s+=`<rect x="${x}" y="${y}" width="3.2" height="5" fill="${cols[i%5]}" transform="rotate(${(u*300+i*40)%360} ${x+1.6} ${y+2.5})"/>`;} return s;}
+function fxTears(x,y,t){let s='';for(let k=0;k<2;k++){const ph=((t*1.2+k*0.5)%1);[-1,1].forEach(d=>{s+=`<path d="M${x+d*9} ${y+ph*14} q-1.8 2.8 0 4 q1.8 -1.2 0 -4 Z" fill="#7CC8F0" opacity="${1-ph}"/>`;});}return s;}
+function fxSteam(x,y,t){let s='';for(let k=0;k<3;k++){const ph=((t*1.4+k/3)%1); s+=`<circle cx="${x+(k-1)*10+Math.sin(t*5+k)*2}" cy="${y-ph*18}" r="${3+ph*4}" fill="#fff" opacity="${(1-ph)*0.9}"/>`;}
+  return s+`<path d="M${x+14} ${y+4} l4 -4 m-4 0 l4 4 M${x+20} ${y+6} l3 -3 m-3 0 l3 3" stroke="#F2545B" stroke-width="1.6" stroke-linecap="round"/>`;}
+function fxHearts(x,y,t,t0){if(t<t0)return '';let s='';for(let i=0;i<6;i++){const st=t0+i*0.5; if(t<st)continue; const u=(t-st)%3; const xx=x+Math.sin(u*3+i)*14+(i%2?8:-8), yy=y-u*24;
+  s+=`<path transform="translate(${xx} ${yy}) scale(${0.8+0.3*Math.sin(u*5)})" d="M0 5 C -7 0, -6 -6, 0 -3 C 6 -6, 7 0, 0 5 Z" fill="${['#F2545B','#FF8FA8'][i%2]}" opacity="${clamp(1-u/3)}"/>`;}return s;}
+function fxBulb(x,y,t,t0){if(t<t0)return '';const sc=popScale(t,t0);return `<g transform="translate(${x} ${y}) scale(${sc})"><circle r="8" fill="#FFE066"/><rect x="-3.5" y="7" width="7" height="4" rx="1.5" fill="#AEB8C4"/>`+[0,60,120,180,240,300].map(a=>`<rect x="-1" y="-15" width="2" height="4" rx="1" fill="#FFE066" transform="rotate(${a+t*40})"/>`).join('')+`</g>`;}
+function fxSparkle(x,y,t,t0,R=50){if(t<t0||t>t0+0.9)return '';const u=(t-t0)/0.9;let s='';for(let i=0;i<8;i++){const a=i/8*Math.PI*2; s+=`<path transform="translate(${x+Math.cos(a)*R*u} ${y+Math.sin(a)*R*u}) scale(${1.4*(1-u)})" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#FFD84D"/>`;}return s;}
+function fxQ(x,y,t,t0){if(t<t0)return '';return `<g transform="translate(${x} ${y}) scale(${popScale(t,t0)}) rotate(${Math.sin(t*8)*10})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="22" fill="${C.ink}" stroke="#fff" stroke-width="4" paint-order="stroke">?</text></g>`;}
+function ballProp(x,y,r,rot){return `<g transform="translate(${x} ${y}) rotate(${rot})"><circle r="${r}" fill="#F2545B"/><path d="M${-r} 0 A${r} ${r} 0 0 0 ${r} 0" fill="#FFCC33"/><circle r="${r*0.32}" fill="#fff"/><ellipse cx="${-r*0.4}" cy="${-r*0.45}" rx="${r*0.25}" ry="${r*0.15}" fill="#fff" opacity=".5"/></g>`;}
+function towerProp(x,y,n,fall){ // n khối, fall 0..1 đổ
+  const cols=['#F2545B','#45B6F0','#FFCC33','#3FAE5A','#9B6CE0','#FF8C2B']; let s='';
+  for(let i=0;i<n;i++){const fx=fall*(i*9+4)*(i%2?1:-1)*0.6, fy=fall*(i*13), r=fall*(i%2?60:-50);
+    s+=`<g transform="translate(${x+fx} ${y-8-i*14+fy}) rotate(${r})"><rect x="-10" y="-7" width="20" height="14" rx="2" fill="${cols[i%6]}"/><rect x="-7" y="-4" width="6" height="3" rx="1" fill="#fff" opacity=".4"/></g>`;}
+  return s;}
+function slideProp(x,y){return `<g transform="translate(${x} ${y})"><rect x="-4" y="-70" width="5" height="70" fill="#45B6F0"/><rect x="14" y="-70" width="5" height="70" fill="#45B6F0"/>${[0,1,2,3].map(i=>`<rect x="-4" y="${-60+i*16}" width="23" height="3" fill="#2F86C2"/>`).join('')}<path d="M19 -70 Q40 -60 52 -20 Q58 -4 74 0 L74 6 Q52 4 46 -16 Q36 -54 19 -62 Z" fill="#FFCC33"/><rect x="-6" y="-74" width="27" height="6" rx="2" fill="#F2545B"/></g>`;}
+function iceCream(x,y,sc,drop){ // drop: 0 còn trên ốc quế, 1 rơi xuống đất
+  let s=`<g transform="translate(${x} ${y}) scale(${sc})"><path d="M-6 0 L0 16 L6 0 Z" fill="#E0A060"/><path d="M-5 3 L5 3 M-3.5 7 L3.5 7" stroke="#C98A48" stroke-width=".8"/>`;
+  if(drop<1){const dy=drop*40; s+=`<circle cx="0" cy="${-5+dy}" r="7" fill="#FF8FA8"/><circle cx="-2" cy="${-8+dy}" r="1" fill="#fff"/><circle cx="2.5" cy="${-4+dy}" r="1" fill="#F2545B"/>`;}
+  return s+'</g>';}
+function easel(x,y,wet,draw){ // wet 0..1 vết nước, draw 0..1 tranh mới
+  let s=`<g transform="translate(${x} ${y})"><path d="M-14 0 L-6 -46 M14 0 L6 -46 M0 0 L0 -40" stroke="#A86A3D" stroke-width="2.4"/><rect x="-18" y="-52" width="36" height="30" rx="2" fill="#fff" stroke="#E0D5C0" stroke-width="1.2"/>`;
+  if(draw<=0){s+=`<circle cx="-8" cy="-42" r="4" fill="#FFCC33"/><path d="M-12 -30 q6 -6 12 0 q6 -6 12 0" stroke="#3FAE5A" stroke-width="2" fill="none"/>`;
+    if(wet>0)s+=`<ellipse cx="2" cy="-36" rx="${12*wet}" ry="${9*wet}" fill="#7CC8F0" opacity=".75"/>`;}
+  else{const st=['#F2545B','#FF8C2B','#FFCC33','#3FAE5A','#45B6F0'];st.forEach((c,i)=>{if(draw*5>i)s+=`<path d="M${-14} ${-26-i*3} Q0 ${-46-i*3} 14 ${-26-i*3}" stroke="${c}" stroke-width="2.4" fill="none" stroke-dasharray="40" stroke-dashoffset="${40*(1-clamp(draw*5-i))}"/>`;}); if(draw>0.8)s+=`<circle cx="12" cy="-46" r="3.5" fill="#FFCC33"/>`;}
+  return s+'</g>';}
+function waveWR(t,t0){const k=eOut(prog(t,t0,t0+0.4)); return -k*(100+25*Math.sin((t-t0)*2*Math.PI*2));}
+function meadow(t){return sky(t)+hills()+grass(t);}
+function selChick(x,y,s,o,t){const e=o.eyes||'open'; const eyes=(e==='open'&&(t%3.3)>3.15)?'blink':e; return `<g transform="translate(${x} ${y}) rotate(${(o.rot||0)+Math.sin(t*1.1)*2} 0 50) scale(${s})">${chick({...o,eyes})}</g>`;}
+function bigWord(text,t,a,b,y=118,col='#FF8C2B',fs=34){if(t<a||t>b)return '';const sc=popScale(t,a)*(t>b-0.25?clamp((b-t)/0.25):1);
+  return `<g transform="translate(90 ${y}) scale(${sc}) rotate(${Math.sin(t*4)*3})"><text text-anchor="middle" dominant-baseline="central" font-family="'Baloo 2'" font-weight="800" font-size="${fs}" fill="${col}" stroke="#fff" stroke-width="6" paint-order="stroke" stroke-linejoin="round">${text}</text></g>`;}
+function mix(a,b,t){const p=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));const A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('');}
